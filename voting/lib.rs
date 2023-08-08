@@ -1,10 +1,13 @@
+
 #![cfg_attr(not(feature = "std"), no_std, no_main)]
+#[warn(unused_imports)]
 
 
 #[ink::contract]
 mod Votantes {
     use ink::prelude::vec::Vec;
-    use ink::env::*;
+    
+   // use ink::env::*;
     
     //use ink::storage::Mapping;
 
@@ -17,20 +20,27 @@ mod Votantes {
         //voters: Mapping<AccountId, Balance>,
     }
     //Tipo de voto
-    #[derive(Debug, PartialEq, Eq, Clone, Copy, scale::Encode, scale::Decode)]
-    #[cfg_attr(feature = "ink-generate-abi", derive(type_metadata::Metadata))]
+    //
+    
+   // #[derive(Debug, PartialEq, Eq, Clone, Copy, scale::Encode, scale::Decode, scale_info::TypeInfo)]
+   // #[cfg_attr(feature = "ink-generate-abi", derive(type_metadata::Metadata))]
+   #[derive(Debug, Eq, PartialEq, scale::Encode, scale::Decode)]
+    #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
     pub enum TipoVoto {
         Positive  = 1 ,
         Neutral = 0,
         Negative = 2,
     }
    
+    
+
     #[ink(event)]
     pub struct Voted {
         voter: AccountId,
         value: TipoVoto,
     }
 
+    
 
     impl Votantes {
         /// Constructor that initializes the `bool` value to the given `init_value`.
@@ -108,9 +118,12 @@ mod Votantes {
         fn ensure_admin(&self) {
             assert_eq!(self.env().caller(), self.admin, "Solo el User Admin puede editar la lista de votantes.");
         }
+
+        
        
        
     }
+
 
     /// Unit tests in Rust are normally defined within such a `#[cfg(test)]`
     /// module and test functions are marked with a `#[test]` attribute.
@@ -119,4 +132,5 @@ mod Votantes {
     mod tests {
    
     }
+    
 }
