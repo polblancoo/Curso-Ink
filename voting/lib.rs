@@ -83,30 +83,47 @@ mod Votantes {
             }
         }
         #[ink(message)]
-        pub fn vote(&mut self, value: TipoVoto) -> bool {
+        pub fn vote(&mut self, voter: AccountId, value: TipoVoto) -> bool {
             let sender = self.env().caller();
-            if !self.is_voter(&sender) {
-                return false;
-            }
-            
-            if let Some(index) = self.voters.iter().position(|&(v, _)| v == sender) {
-                match value {
-                    TipoVoto::Positive => self.voters[index].1 += 1,
-                    TipoVoto::Neutral => {} // No change for neutral votes
-                    TipoVoto::Negative => self.voters[index].1 -= 1,
+         
+           if sender == voter {
+             return false
+           } 
+            if self.is_voter(&voter) {
+                if let Some(index) = self.voters.iter().position(|&(v, _)| v == voter) {
+                    match value {
+                        TipoVoto::Positive => self.voters[index].1 += 1,
+                        TipoVoto::Neutral => {} // No change for neutral votes
+                        TipoVoto::Negative => self.voters[index].1 -= 1,
+                     }
+        
+                    self.env().emit_event(Voted {
+                        voter,
+                        value,
+                    });
+        
+                    true
+                } else {
+                    false
                 }
-
-                self.env().emit_event(Voted {
-                    voter: sender,
-                    value,
-                });
-
-                true
             } else {
                 false
             }
         }
+        
 
+
+
+
+
+#[ink(message)]
+        pub fn get_votes(&self, voter: AccountId) -> i8 {
+            if let Some(index) = self.voters.iter().position(|&(v, _)| v == voter) {
+                self.voters[index].1
+            } else {
+                0
+            }
+        }
 
 
 
