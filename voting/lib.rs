@@ -4,12 +4,10 @@
 
 
 #[ink::contract]
-mod Votantes {
+mod votantes {
     use ink::prelude::vec::Vec;
     
-   // use ink::env::*;
-    
-    //use ink::storage::Mapping;
+  
 
     /// Defines the storage of your contract.
     #[ink(storage)]
@@ -17,14 +15,10 @@ mod Votantes {
 
         admin: AccountId,
         voters: Vec<(AccountId, i8)>,
-        //voters: Mapping<AccountId, Balance>,
+        
     }
     //Tipo de voto
-    //
-    
-   // #[derive(Debug, PartialEq, Eq, Clone, Copy, scale::Encode, scale::Decode, scale_info::TypeInfo)]
-   // #[cfg_attr(feature = "ink-generate-abi", derive(type_metadata::Metadata))]
-   #[derive(Debug, Eq, PartialEq, scale::Encode, scale::Decode)]
+    #[derive(Debug, Eq, PartialEq, scale::Encode, scale::Decode)]
     #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
     pub enum TipoVoto {
         Positive  = 1 ,
@@ -51,9 +45,11 @@ mod Votantes {
                 voters: Default::default(),
             }
         }
+
+        
         
         #[ink(message)]
-        pub fn ChangeAdmin(&mut self, voter: AccountId) -> bool {
+        pub fn change_admin(&mut self, voter: AccountId) -> bool {
             self.ensure_admin();
             if self.is_voter(&voter) {
                 return false;
@@ -63,7 +59,7 @@ mod Votantes {
         }
         
         #[ink(message)]
-        pub fn AddVotante(&mut self, voter: AccountId) -> bool {
+        pub fn add_voter(&mut self, voter: AccountId) -> bool {
             self.ensure_admin();
             if self.is_voter(&voter) {
                 return false;
@@ -73,7 +69,7 @@ mod Votantes {
         }
 
         #[ink(message)]
-        pub fn RemoveVoter(&mut self, voter: AccountId) -> bool {
+        pub fn remove_voter(&mut self, voter: AccountId) -> bool {
             self.ensure_admin();
             if let Some(index) = self.voters.iter().position(|&(v, _)| v == voter) {
                 self.voters.swap_remove(index);
