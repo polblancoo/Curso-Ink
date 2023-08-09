@@ -37,9 +37,6 @@ Clase 8:
 Repaso de Librería Polkadot.js
 Useink (React hooks)
 
-3
-
-1
 
 
 
