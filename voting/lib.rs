@@ -6,7 +6,7 @@
 #[ink::contract]
 mod votantes {
     use ink::prelude::vec::Vec;
-    
+    use scale::{Decode, Encode};
   
 
     /// Defines the storage of your contract.
@@ -138,12 +138,65 @@ mod votantes {
     }
 
 
-    /// Unit tests in Rust are normally defined within such a `#[cfg(test)]`
+    /// Unit tests in Rust are normally defined within such a `#[cfg(test)]`code 
     /// module and test functions are marked with a `#[test]` attribute.
     /// The below code is technically just normal Rust code.
-    #[cfg(test)]
-    mod tests {
    
-    }
+   #[cfg(test)]
+    mod tests {
+        use super::*;
+        use ink::env::{test::set_caller, DefaultEnvironment};
+
+        
+        
+            #[ink::test]
+             fn test_new()  {
+                
+                let admin = AccountId::from([u8::MAX; 32]);
+                //inicializa el contrato 
+                let contract = Votantes::new(admin);
+
+                let user0 = AccountId::from([0; 32]);
+                let user1 = AccountId::from([1; 32]);
+                let user2 = AccountId::from([2; 32]);
+
+                assert_eq!(contract.admin , admin);
+                
+              
+            }
+            #[ink::test]
+            fn test_es_voter()  {
+                let admin = AccountId::from([u8::MAX; 32]);
+                //inicializa el contrato 
+                let  contract = Votantes::new(admin);
+                let user0 = AccountId::from([0; 32]);
+                
+                assert!(!contract.is_voter( &user0));
+                
+            }
+            #[ink::test]
+            fn test_configurar_votante_y_votar()  {
+                let admin = AccountId::from([u8::MAX; 32]);
+                //inicializa el contrato 
+                let mut contract = Votantes::new(admin);
+                let user0 = AccountId::from([0; 32]);
+                let user1 = AccountId::from([0; 32]);
+                let v = TipoVoto::Positive;
+                //configuro admin y lo agrego a la lista de votantes
+                set_caller::<DefaultEnvironment>(admin);
+                assert!( contract.add_voter(user1));
+
+                //configuro el caller y voto
+               /* 
+                set_caller::<DefaultEnvironment>(user1);
+                
+             */
+            assert!( contract.vote(user0 , v));
+            }
+
+        
+       
+
+    }//fin mod test
     
 }
