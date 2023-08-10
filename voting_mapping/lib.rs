@@ -115,14 +115,9 @@ mod tests {
             let bob = AccountId::from([2; 32]);
             let charlie = AccountId::from([3; 32]);
 
-            // Configura el admin y votantes en el contrato
-            set_caller::<DefaultEnvironment>(admin.clone());
-            assert!(contract.add_voter(alice.clone()));
-            assert!(contract.add_voter(bob.clone()));
-            assert!(contract.add_voter(charlie.clone()));
-
+           
             // Restaura el caller a su valor por defecto
-            set_caller::<DefaultEnvironment>(AccountId::admin);
+            set_caller::<DefaultEnvironment>(admin.clone());
 
             Self {
                 contract,
@@ -133,22 +128,33 @@ mod tests {
             }
         }
        
-       
+    }
         #[ink::test]
-        fn test_change_admin() {
-            let context = Context::new();
+         fn test_change_admin() {
+            let mut context = Context::new();
             set_caller::<DefaultEnvironment>(context.admin.clone());
-            assert!(context.contract.change_admin(context.bob.clone()));
+            assert!(context.contract.change_admin(context.bob.clone() ));
             //preguntamos si bob es el admin
            // assert_eq!(context.contract.admin(), context.bob);
             //una vez mas de bob --- a alice pasa el admin
             set_caller::<DefaultEnvironment>(context.bob.clone());
             assert!(!context.contract.change_admin(context.alice.clone()));
             
-        }
+         // Configura el admin y votantes en el contrato
+         set_caller::<DefaultEnvironment>(context.admin.clone());
+         assert!(context.contract.add_voter(context.alice.clone()));
+         assert!(context.contract.add_voter(context.bob.clone()));
+         assert!(context.contract.add_voter(context.charlie.clone()));
+       
+        } 
+        
+        #[ink::test]
+         fn testffff() {
 
 
-    }
+         }
+
+   
 
 
 }
