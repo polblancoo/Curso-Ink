@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-   use crate::src::votantes ; // Ajusta la ruta a tu módulo votantes
+   use crate::src::votantes ; 
     use ink::env::{test::set_caller, DefaultEnvironment};
 
     pub struct Context {
@@ -13,7 +13,7 @@ mod tests {
 
     impl Context {
         pub fn new() -> Self {
-            // ... (resto del código para configurar el contexto)
+            // ... (resto )
         }
     }
 
@@ -21,17 +21,16 @@ mod tests {
     fn test_change_admin() {
         let context = Context::new();
 
-        // Implementa las pruebas para la función change_admin aquí
-        // ...
+        // 
+        
     }
 
     #[ink::test]
     fn test_add_voter() {
         let context = Context::new();
 
-        // Implementa las pruebas para la función add_voter aquí
-        // ...
+       
     }
 
-    // Resto de las funciones de prueba...
+    /
 }
