@@ -3,7 +3,7 @@
 
 
 #[ink::contract]
- pub mod votantes {
+ mod votantes {
     
     use ink::storage::Mapping;
 
@@ -83,16 +83,16 @@
             assert_eq!(self.env().caller(), self.admin, "Solo el User Admin puede editar la lista de votantes.");
         }
     }
-}
+
 // Pruebas unitarias
 #[cfg(test)]
-//mod tests 
+
 mod tests {
     
     use super::*;
-    use votantes::Votantes;
+    //use votantes::Votantes;
     use ink::env::{test::set_caller, DefaultEnvironment};
-    //use ink::*;
+   // use ink_storage_traits::*;
     
     pub struct Context {
         contract: Votantes,
@@ -122,7 +122,7 @@ mod tests {
             assert!(contract.add_voter(charlie.clone()));
 
             // Restaura el caller a su valor por defecto
-            set_caller::<DefaultEnvironment>(AccountId::admin.clone());
+            set_caller::<DefaultEnvironment>(AccountId::admin);
 
             Self {
                 contract,
@@ -151,4 +151,5 @@ mod tests {
     }
 
 
+}
 }
