@@ -58,7 +58,7 @@
             if self.is_voter(&voter) {
                
               
-                println!("Voter: {:?} y valor: {:?}, sender es: {:?}", voter, value, sender);
+               // println!("Voter: {:?} y valor: {:?}, sender es: {:?}", voter, value, sender);
                 let current_votes = self.voters.get(&voter);
                 
                 if current_votes.unwrap()  + value  <= 100  {
@@ -87,6 +87,8 @@
 
         fn ensure_admin(&self) {
             assert_eq!(self.env().caller(), self.admin, "Solo el User Admin puede editar la lista de votantes.");
+        
+        
         }
     }
 
@@ -155,11 +157,18 @@ mod tests {
     
             // Verifica que un votante existente pueda ser eliminado
             set_caller::<DefaultEnvironment>(context.admin);
+            context.contract.add_voter(context.alice);
+            context.contract.add_voter(context.bob);
             assert!(context.contract.remove_voter(context.alice));
             assert!(!context.contract.is_voter( &context.alice));
     
             // Intenta eliminar un votante inexistente y verifica que falle
             assert!(!context.contract.remove_voter(context.alice));
+
+            //sete un Account no autorizado como admin e intenta borrar otro Account 
+          //  set_caller::<DefaultEnvironment>(context.bob);
+          //  context.contract.add_voter(context.alice);
+          //  assert!(!context.contract.remove_voter(context.alice));
         }
         #[ink::test]
         fn test_vote() {
@@ -173,14 +182,17 @@ mod tests {
             // Verifica que un votante no pueda votar por sí mismo
             set_caller::<DefaultEnvironment>(context.bob);
             assert!(context.contract.vote(context.alice, 50));
-
-            // Verifica que un votante no pueda votar más de 100 vo tos en total
-         //   set_caller::<DefaultEnvironment>(context.bob);
-        //   assert!(context.contract.vote(context.bob, 80));
-            //Obtiene los votos
-        // assert_eq!(context.contract.get_votes(context.bob), 80);
+            assert_eq!(context.contract.get_votes(context.alice), 50);
+            // Verifica que un votante no pueda votar por sí mismo
+            set_caller::<DefaultEnvironment>(context.bob);
+            assert!(!context.contract.vote(context.bob, 80));
+            assert_ne!(context.contract.get_votes(context.bob), 90);
+          
           //intenta votar mas de 100 puntos ppt
-        //  assert!(!context.contract.vote(context.bob, 150));
+          // Verifica que un votante no pueda votar por sí mismo
+          set_caller::<DefaultEnvironment>(context.bob);
+          assert!(!context.contract.vote(context.alice, 150));
+         //assert_eq!(context.contract.get_votes(context.alice), 150);
 
             // Verifica que un votante pueda votar correctamente
             //no puede votar .
