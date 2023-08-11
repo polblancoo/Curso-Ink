@@ -167,8 +167,7 @@ mod tests {
 
             //sete un Account no autorizado como admin e intenta borrar otro Account 
           //  set_caller::<DefaultEnvironment>(context.bob);
-          //  context.contract.add_voter(context.alice);
-          //  assert!(!context.contract.remove_voter(context.alice));
+          
         }
         #[ink::test]
         fn test_vote() {
@@ -194,18 +193,11 @@ mod tests {
           assert!(!context.contract.vote(context.alice, 150));
          //assert_eq!(context.contract.get_votes(context.alice), 150);
 
-            // Verifica que un votante pueda votar correctamente
-            //no puede votar .
-        //   set_caller::<DefaultEnvironment>(context.charlie);
-        //   assert!(!context.contract.vote(context.bob, 30));
+           
             
     }
 
-        #[ink::test]
-         fn testffff() {
-
-
-         }
+        
 
    
 
