@@ -117,7 +117,7 @@ mod tests {
 
            
             // Restaura el caller a su valor por defecto
-            set_caller::<DefaultEnvironment>(admin.clone());
+            set_caller::<DefaultEnvironment>(admin);
 
             Self {
                 contract,
@@ -132,22 +132,48 @@ mod tests {
         #[ink::test]
          fn test_change_admin() {
             let mut context = Context::new();
-            set_caller::<DefaultEnvironment>(context.admin.clone());
-            assert!(context.contract.change_admin(context.bob.clone() ));
+            set_caller::<DefaultEnvironment>(context.admin);
+            assert!(context.contract.change_admin(context.bob));
             //preguntamos si bob es el admin
-           // assert_eq!(context.contract.admin(), context.bob);
-            //una vez mas de bob --- a alice pasa el admin
-            set_caller::<DefaultEnvironment>(context.bob.clone());
-            assert!(!context.contract.change_admin(context.alice.clone()));
-            
-         // Configura el admin y votantes en el contrato
-         set_caller::<DefaultEnvironment>(context.admin.clone());
-         assert!(context.contract.add_voter(context.alice.clone()));
-         assert!(context.contract.add_voter(context.bob.clone()));
-         assert!(context.contract.add_voter(context.charlie.clone()));
-       
-        } 
+            assert_eq!(context.contract.admin, context.bob);
+              //una vez mas de bob --- a alice pasa el admin
+            set_caller::<DefaultEnvironment>(context.bob);
+            assert!(context.contract.change_admin(context.alice));
+            //preguntamos si alice es el admin
+            assert_eq!(context.contract.admin, context.alice);
         
+        } 
+        #[ink::test]
+        fn test_remove_voter() {
+            let mut context = Context::new();
+    
+            // Verifica que un votante existente pueda ser eliminado
+            set_caller::<DefaultEnvironment>(context.admin);
+            assert!(context.contract.remove_voter(context.alice));
+            assert!(!context.contract.is_voter( &context.alice));
+    
+            // Intenta eliminar un votante inexistente y verifica que falle
+            assert!(!context.contract.remove_voter(context.alice));
+        }
+        #[ink::test]
+    fn test_vote() {
+        let mut context = Context::new();
+
+        // Verifica que un votante no pueda votar por sí mismo
+        set_caller::<DefaultEnvironment>(context.alice);
+        assert!(!context.contract.vote(context.alice, 50));
+
+        // Verifica que un votante no pueda votar más de 100 votos en total
+        set_caller::<DefaultEnvironment>(context.bob);
+        assert!(context.contract.vote(context.charlie, 80));
+        assert!(!context.contract.vote(context.charlie, 40));
+
+        // Verifica que un votante pueda votar correctamente
+        set_caller::<DefaultEnvironment>(context.charlie);
+        assert!(context.contract.vote(context.bob, 30));
+        assert_eq!(context.contract.get_votes(context.bob), 30);
+    }
+
         #[ink::test]
          fn testffff() {
 
