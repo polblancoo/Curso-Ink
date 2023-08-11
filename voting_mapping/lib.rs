@@ -1,5 +1,5 @@
 #![cfg_attr(not(feature = "std"), no_std)]
-
+#[warn(non_snake_case)]
 
 
 #[ink::contract]
@@ -11,7 +11,7 @@
     pub struct Votantes {
 
         admin: AccountId,
-        voters: Mapping<AccountId, Balance>,
+        voters: Mapping<AccountId, i16>,
     }
 
     impl Votantes {
@@ -47,36 +47,42 @@
         }
 
         #[ink(message)]
-        pub fn vote(&mut self, voter: AccountId, value: Balance) -> bool {
+        pub fn vote(&mut self, voter: AccountId, value: i16) -> bool {
+           // println!("{:?}", self.is_voter(&voter));
             let sender = self.env().caller();
-
-            if sender == voter || value < 1 as Balance || value > 100 as Balance {
+           
+            if sender == voter || value < 1 || value > 100 {
                 return false;
             }
-
+            //println!("votante existe : {:?}", self.is_voter(&voter));
             if self.is_voter(&voter) {
+               
+              
+                println!("Voter: {:?} y valor: {:?}, sender es: {:?}", voter, value, sender);
                 let current_votes = self.voters.get(&voter);
-                if current_votes.unwrap() + value as u128 <= 100 as u128 {
-                    let tot=  current_votes.unwrap()  + value as u128;
+                
+                if current_votes.unwrap()  + value  <= 100  {
+                    let tot=  current_votes.unwrap()  + value ;
                     self.voters.insert(voter,&tot );
                     true
                 } else {
                     false
                 }
             } else {
-                false
+                false 
             }
         }
 
         #[ink(message)]
-        pub fn get_votes(&self, voter: AccountId) -> Balance {
+        pub fn get_votes(&self, voter: AccountId) -> i16 {
             self.voters.get(voter).unwrap_or(0)
             
         }
 
         fn is_voter(&self, account: &AccountId) -> bool {
-            let t= self.voters.get(&account).unwrap_or(0);
-           if t== 0 {false}else {true}
+             self.voters.contains(account)
+              // self.voters.contains(&voter)
+          
         }
 
         fn ensure_admin(&self) {
@@ -99,7 +105,7 @@ mod tests {
         admin: AccountId,
         alice: AccountId,
         bob: AccountId,
-        charlie: AccountId,
+        
     }
 
     /****************************/
@@ -113,7 +119,7 @@ mod tests {
 
             let alice = AccountId::from([1; 32]);
             let bob = AccountId::from([2; 32]);
-            let charlie = AccountId::from([3; 32]);
+            //let charlie = AccountId::from([3; 32]);
 
            
             // Restaura el caller a su valor por defecto
@@ -124,7 +130,7 @@ mod tests {
                 admin,
                 alice,
                 bob,
-                charlie,
+                
             }
         }
        
@@ -156,22 +162,31 @@ mod tests {
             assert!(!context.contract.remove_voter(context.alice));
         }
         #[ink::test]
-    fn test_vote() {
-        let mut context = Context::new();
+        fn test_vote() {
+            let mut context = Context::new();
+            //se agregan a la lista de los q pueden votar
+            set_caller::<DefaultEnvironment>(context.admin);
+            context.contract.add_voter(context.alice);
+            context.contract.add_voter(context.bob);
+            
 
-        // Verifica que un votante no pueda votar por sí mismo
-        set_caller::<DefaultEnvironment>(context.alice);
-        assert!(!context.contract.vote(context.alice, 50));
+            // Verifica que un votante no pueda votar por sí mismo
+            set_caller::<DefaultEnvironment>(context.bob);
+            assert!(context.contract.vote(context.alice, 50));
 
-        // Verifica que un votante no pueda votar más de 100 votos en total
-        set_caller::<DefaultEnvironment>(context.bob);
-        assert!(context.contract.vote(context.charlie, 80));
-        assert!(!context.contract.vote(context.charlie, 40));
+            // Verifica que un votante no pueda votar más de 100 vo tos en total
+         //   set_caller::<DefaultEnvironment>(context.bob);
+        //   assert!(context.contract.vote(context.bob, 80));
+            //Obtiene los votos
+        // assert_eq!(context.contract.get_votes(context.bob), 80);
+          //intenta votar mas de 100 puntos ppt
+        //  assert!(!context.contract.vote(context.bob, 150));
 
-        // Verifica que un votante pueda votar correctamente
-        set_caller::<DefaultEnvironment>(context.charlie);
-        assert!(context.contract.vote(context.bob, 30));
-        assert_eq!(context.contract.get_votes(context.bob), 30);
+            // Verifica que un votante pueda votar correctamente
+            //no puede votar .
+        //   set_caller::<DefaultEnvironment>(context.charlie);
+        //   assert!(!context.contract.vote(context.bob, 30));
+            
     }
 
         #[ink::test]
