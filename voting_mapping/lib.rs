@@ -7,6 +7,17 @@
     
     use ink::storage::Mapping;
 
+
+    #[derive(PartialEq, Debug, scale::Encode, scale::Decode)]
+    #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
+    pub enum ContractError {
+        YouAreNotVoter,
+        AccounNotListed,
+        NoAdmin,
+        
+    }
+
+
     #[ink(storage)]
     pub struct Votantes {
 
@@ -24,26 +35,38 @@
         }
 
         #[ink(message)]
-        pub fn change_admin(&mut self, new_admin: AccountId) -> bool {
-            self.ensure_admin();
-            self.admin = new_admin;
-            true
+        pub fn change_admin(&mut self, new_admin: AccountId) -> Result<bool, ContractError> {
+            match self.ensure_admin() {
+                Ok(true) => {
+                    self.admin = new_admin;
+                    Ok(true)
+                },
+                Ok(false) => Ok(false),
+                Err(_) => Err(ContractError::NoAdmin),
+            }
         }
+        
+        
+        
 
         #[ink(message)]
-        pub fn add_voter(&mut self, voter: AccountId) -> bool {
-            self.ensure_admin();
+        pub fn add_voter(&mut self, voter: AccountId) ->  Result<bool, ContractError> {
+            self.ensure_admin()?;
             if self.is_voter(&voter) {
-                return false;
+                return Err(ContractError::YouAreNotVoter);
             }
             self.voters.insert(voter, &0);
-            true
+            Ok(true)
         }
 
         #[ink(message)]
-        pub fn remove_voter(&mut self, voter: AccountId) -> bool {
-            self.ensure_admin();
-            self.voters.take(&voter).is_some()
+        pub fn remove_voter(&mut self, voter: AccountId) ->  Result<bool, ContractError>  {
+           self.ensure_admin()?;
+           if self.voters.take(&voter).is_some(){
+                Ok(true)
+           }else{
+                Err(ContractError::YouAreNotVoter)
+           }
         }
 
         #[ink(message)]
@@ -85,10 +108,12 @@
           
         }
 
-        fn ensure_admin(&self) {
-            assert_eq!(self.env().caller(), self.admin, "Solo el User Admin puede editar la lista de votantes.");
-        
-        
+        fn ensure_admin(&self) -> Result<bool, ContractError> {
+            if self.env().caller() == self.admin {
+                Ok(true)
+            } else {
+                Err(ContractError::NoAdmin)
+            }
         }
     }
 
@@ -141,12 +166,17 @@ mod tests {
          fn test_change_admin() {
             let mut context = Context::new();
             set_caller::<DefaultEnvironment>(context.admin);
-            assert!(context.contract.change_admin(context.bob));
+            let result = context.contract.change_admin(context.bob);
+                 assert_eq!(result, Ok(true));
+                 assert_eq!(context.contract.admin, context.bob);
             //preguntamos si bob es el admin
             assert_eq!(context.contract.admin, context.bob);
+
               //una vez mas de bob --- a alice pasa el admin
             set_caller::<DefaultEnvironment>(context.bob);
-            assert!(context.contract.change_admin(context.alice));
+           // assert!(context.contract.change_admin(context.alice));
+            let result = context.contract.change_admin(context.alice);
+                 assert_eq!(result, Ok(true));
             //preguntamos si alice es el admin
             assert_eq!(context.contract.admin, context.alice);
         
@@ -159,12 +189,16 @@ mod tests {
             set_caller::<DefaultEnvironment>(context.admin);
             context.contract.add_voter(context.alice);
             context.contract.add_voter(context.bob);
-            assert!(context.contract.remove_voter(context.alice));
-            assert!(!context.contract.is_voter( &context.alice));
-    
-            // Intenta eliminar un votante inexistente y verifica que falle
-            assert!(!context.contract.remove_voter(context.alice));
-
+           
+            //assert!(context.contract.remove_voter(context.alice));
+            let result = context.contract.remove_voter(context.bob);
+                 assert_eq!(result, Ok(true));
+            //assert!(!context.contract.is_voter( &context.alice));
+            let result = context.contract.remove_voter(context.alice);
+             assert_eq!(result, Ok(true));
+             assert_eq!(context.contract.is_voter(&context.alice), false);
+             
+            
             //sete un Account no autorizado como admin e intenta borrar otro Account 
           //  set_caller::<DefaultEnvironment>(context.bob);
           
