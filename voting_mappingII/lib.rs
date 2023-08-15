@@ -1,4 +1,4 @@
-#![cfg_attr(not(feature = "std"), no_std)]
+#![cfg_attr(not(feature = "std"), no_std,no_main)]
 #[warn(non_snake_case)]
 
 
@@ -6,11 +6,26 @@
  mod votantes {
     
     use ink::storage::Mapping;
+    //Eventos
+    #[ink(event)]
+    pub struct new_voter {
+        #[ink(topic)]
+        voter: AccountId,
+    }
+    #[ink(event)]
+    pub struct voto {
+        #[ink(topic)]
+        voto: AccountId, //de
+        #[ink(topic)]
+        voto_a:AccountId, //a
+        votos: i32,
+    }
 
-
+    //********************** */
     #[derive(PartialEq, Debug, scale::Encode, scale::Decode)]
     #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
     pub enum ContractError {
+         
         YouAreNotVoter,
         AccounNotListed,
         NoAdmin,
@@ -23,11 +38,18 @@
         modified_date: u64,
     }
 
+    
+
     #[ink(storage)]
     pub struct Votantes {
-
+        //admin para ABM DE enabled_voters
         admin: Admin,
-        voters: Mapping<AccountId, i16>,
+        //guarda votos
+        voters: Mapping<AccountId, i32>,
+        //agrega votantes x el admin
+        enabled_voter: Mapping<AccountId, ()>,
+        //total de votos
+        total_votos: i32,
     }
 
     impl Votantes {
@@ -39,7 +61,9 @@
                     address: admin_init,
                     modified_date: now,
                 },
-                voters: Mapping::default()
+                voters: Mapping::default(),
+                enabled_voter:Mapping::default(),
+                total_votos:0,
            }
         }
 
@@ -48,14 +72,13 @@
             let now = Self::env().block_timestamp();
             match self.ensure_admin() {
                 Ok(true) => {
-                 Admin{
-                    address: new_admin ,
-                    modified_date: now,
-                    
-                 };
-                    
-                    
-                    Ok(true)
+                   
+                        self.admin= Admin {
+                            address: new_admin,
+                            modified_date: now,
+                        };
+                        Ok(true)
+                     
                 },
                 Ok(false) => Ok(false),
                 Err(_) => Err(ContractError::NoAdmin),
@@ -68,17 +91,22 @@
         #[ink(message)]
         pub fn add_voter(&mut self, voter: AccountId) ->  Result<bool, ContractError> {
             self.ensure_admin()?;
-            if self.is_voter(&voter) {
-                return Err(ContractError::YouAreNotVoter);
-            }
-            self.voters.insert(voter, &0);
+           // if self.is_voter(&voter) {
+           //     return Err(ContractError::YouAreNotVoter);
+           // }
+            //self.voters.insert(voter, &0);
+            self.enabled_voter.insert(voter, &());
+            //emite evento.
+            self.env().emit_event(new_voter { voter });
+            //devuelve OK(bool o Err ), por el Result
             Ok(true)
         }
 
         #[ink(message)]
         pub fn remove_voter(&mut self, voter: AccountId) ->  Result<bool, ContractError>  {
            self.ensure_admin()?;
-           if self.voters.take(&voter).is_some(){
+           if self.enabled_voter.take(&voter).is_some(){
+               //Habria que eliminar de new_voters mapping tambien o no?
                 Ok(true)
            }else{
                 Err(ContractError::YouAreNotVoter)
@@ -86,40 +114,73 @@
         }
 
         #[ink(message)]
-        pub fn vote(&mut self, voter: AccountId, value: i16) -> bool {
+        pub fn vote(&mut self, voter: AccountId, value: i32) -> bool {
            // println!("{:?}", self.is_voter(&voter));
             let sender = self.env().caller();
-           
-            if sender == voter || value < 1 || value > 100 {
+            if sender == voter || value < 1 {
                 return false;
             }
-            //println!("votante existe : {:?}", self.is_voter(&voter));
+        
             if self.is_voter(&voter) {
-               
-              
-               // println!("Voter: {:?} y valor: {:?}, sender es: {:?}", voter, value, sender);
-                let current_votes = self.voters.get(&voter);
-                
-                if current_votes.unwrap()  + value  <= 100  {
-                    let tot=  current_votes.unwrap()  + value ;
-                    self.voters.insert(voter,&tot );
+                let sender_votes = self.voters.get(&sender).unwrap_or(0);
+                let booster = self.calculate_booster(sender_votes);
+                let added_votes = value * booster;
+        
+                // Verificar que el votante tenga suficientes votos para votar con el booster
+                if sender_votes >= added_votes {
+                    // Restar los votos usados para votar
+                    self.voters.insert(sender, &(sender_votes - added_votes));
+        
+                    // Sumar los votos al total_votos
+                    self.total_votos += added_votes;
+        
+                    // Emitir evento de voto
+                    self.env().emit_event(voto {
+                        voto: sender,
+                        voto_a: voter,
+                        votos: added_votes,
+                    });
+        
                     true
                 } else {
                     false
                 }
             } else {
-                false 
+                false
             }
+        
+           
+
         }
 
+        fn calculate_booster(&self, sender_votes: i32) -> i32 {
+            let total_votes = self.total_votos;
+            if total_votes == 0 {
+                1
+            } else {
+                let booster = (sender_votes  / total_votes)  * 100;
+                match booster {
+                    _ if booster <= 25 => 2,
+                    _ if booster <= 50 => 3,
+                    _ if booster <= 75 => 4,
+                    _ => 5,
+                }
+            }
+        }
+        
         #[ink(message)]
-        pub fn get_votes(&self, voter: AccountId) -> i16 {
+        pub fn get_votes(&self, voter: AccountId) -> i32 {
             self.voters.get(voter).unwrap_or(0)
+            
+        }
+        #[ink(message)]
+        pub fn get_total_votos(&self) -> i32 {
+            self.total_votos
             
         }
 
         fn is_voter(&self, account: &AccountId) -> bool {
-             self.voters.contains(account)
+             self.enabled_voter.contains(account)
               // self.voters.contains(&voter)
           
         }
@@ -181,8 +242,10 @@ mod tests {
         #[ink::test]
          fn test_change_admin() {
             let mut context = Context::new();
+            
             set_caller::<DefaultEnvironment>(context.admin);
             let result = context.contract.change_admin(context.bob);
+                 //println!("Admin {:?} ---{:?}", context.contract.admin.address, context.bob);
                  assert_eq!(result, Ok(true));
                  assert_eq!(context.contract.admin.address, context.bob);
             //preguntamos si bob es el admin
@@ -224,8 +287,11 @@ mod tests {
             let mut context = Context::new();
             //se agregan a la lista de los q pueden votar
             set_caller::<DefaultEnvironment>(context.admin);
-            context.contract.add_voter(context.alice);
-            context.contract.add_voter(context.bob);
+            //print!("caller :{:?}", context.admin);
+            //enabled_voter
+            let add0=context.contract.add_voter(context.alice);
+            assert_eq!(add0.unwrap() as bool, true as bool);
+            let add1= context.contract.add_voter(context.bob);
             
 
             // Verifica que un votante no pueda votar por sí mismo
