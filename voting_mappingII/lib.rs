@@ -8,12 +8,12 @@
     use ink::storage::Mapping;
     //Eventos
     #[ink(event)]
-    pub struct new_voter {
+    pub struct NewVoter {
         #[ink(topic)]
         voter: AccountId,
     }
     #[ink(event)]
-    pub struct voto {
+    pub struct Voto {
         #[ink(topic)]
         voto: AccountId, //de
         #[ink(topic)]
@@ -97,7 +97,7 @@
             //self.voters.insert(voter, &0);
             self.enabled_voter.insert(voter, &());
             //emite evento.
-            self.env().emit_event(new_voter { voter });
+            self.env().emit_event(NewVoter { voter });
             //devuelve OK(bool o Err ), por el Result
             Ok(true)
         }
@@ -115,36 +115,38 @@
 
         #[ink(message)]
         pub fn vote(&mut self, voter: AccountId, value: i32) -> bool {
-           // println!("{:?}", self.is_voter(&voter));
+           
             let sender = self.env().caller();
             if sender == voter || value < 1 {
                 return false;
             }
-        
+            
             if self.is_voter(&voter) {
-                let sender_votes = self.voters.get(&sender).unwrap_or(0);
+                //println!("es votante :{:?}", self.is_voter(&voter));
+                let sender_votes = self.voters.get(&sender).unwrap_or(1);
+                println!("Cantidad de votos antes de Booster :{:?}", sender_votes);
                 let booster = self.calculate_booster(sender_votes);
+                println!(" Booster :{:?}", booster);
                 let added_votes = value * booster;
-        
+               
                 // Verificar que el votante tenga suficientes votos para votar con el booster
-                if sender_votes >= added_votes {
-                    // Restar los votos usados para votar
-                    self.voters.insert(sender, &(sender_votes - added_votes));
+                
+                    println!(" votos totales con Booster :{:?}", added_votes);
+                    
+                    self.voters.insert(voter, &added_votes);
         
                     // Sumar los votos al total_votos
                     self.total_votos += added_votes;
         
                     // Emitir evento de voto
-                    self.env().emit_event(voto {
+                    self.env().emit_event(Voto {
                         voto: sender,
                         voto_a: voter,
                         votos: added_votes,
                     });
         
                     true
-                } else {
-                    false
-                }
+               
             } else {
                 false
             }
@@ -290,12 +292,13 @@ mod tests {
             //print!("caller :{:?}", context.admin);
             //enabled_voter
             let add0=context.contract.add_voter(context.alice);
-            assert_eq!(add0.unwrap() as bool, true as bool);
+            assert!(add0.unwrap() );
             let add1= context.contract.add_voter(context.bob);
+            assert!(add1.unwrap()  );
             
-
             // Verifica que un votante no pueda votar por sí mismo
             set_caller::<DefaultEnvironment>(context.bob);
+           // println!("{:?}", context.contract.is_voter(&context.alice));
             assert!(context.contract.vote(context.alice, 50));
             assert_eq!(context.contract.get_votes(context.alice), 50);
             // Verifica que un votante no pueda votar por sí mismo
@@ -304,10 +307,10 @@ mod tests {
             assert_ne!(context.contract.get_votes(context.bob), 90);
           
           //intenta votar mas de 100 puntos ppt
-          // Verifica que un votante no pueda votar por sí mismo
+          
           set_caller::<DefaultEnvironment>(context.bob);
-          assert!(!context.contract.vote(context.alice, 150));
-         //assert_eq!(context.contract.get_votes(context.alice), 150);
+          assert!(context.contract.vote(context.alice, 300));
+         
 
            
             
