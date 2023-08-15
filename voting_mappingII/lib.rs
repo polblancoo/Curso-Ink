@@ -124,14 +124,14 @@
             if self.is_voter(&voter) {
                 //println!("es votante :{:?}", self.is_voter(&voter));
                 let sender_votes = self.voters.get(&sender).unwrap_or(1);
-                println!("Cantidad de votos antes de Booster :{:?}", sender_votes);
+               // println!("Cantidad de votos antes de Booster :{:?}", sender_votes);
                 let booster = self.calculate_booster(sender_votes);
-                println!(" Booster :{:?}", booster);
+                //println!(" Booster :{:?}", booster);
                 let added_votes = value * booster;
                
                 // Verificar que el votante tenga suficientes votos para votar con el booster
                 
-                    println!(" votos totales con Booster :{:?}", added_votes);
+                  //  println!(" votos totales con Booster :{:?}", added_votes);
                     
                     self.voters.insert(voter, &added_votes);
         
