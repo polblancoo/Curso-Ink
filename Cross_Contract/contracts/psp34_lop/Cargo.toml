@@ -1,0 +1,34 @@
+[package]
+name = "my_psp34"
+version = "1.0.0"
+edition = "2021"
+authors = ["The best developer ever"]
+
+[dependencies]
+
+ink = { version = "4.2.1", default-features = false }
+
+scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
+scale-info = { version = "2.6", default-features = false, features = ["derive"], optional = true }
+
+# Include brush as a dependency and enable default implementation for PSP22 via brush feature
+# Include brush as a dependency and enable default implementation for PSP22 via brush feature
+#openbrush = { tag = "v4.0.0-beta", git = "https://github.com/Brushfam/openbrush-contracts", default-features = false, features = ["psp34", "ownable"] }
+#openbrush_contracts = "2.2.0"
+
+#openbrush = 2.2.0",
+#openbrush_contracts = { version ="2.2.0", features = ["psp34", "ownable"] }
+openbrush = { tag = "4.0.0-beta", git = "https://github.com/Brushfam/openbrush-contracts?tag=4.0.0-beta", default-features = false, features = ["psp34", "ownable"] }
+#openbrush = { path = "../..", default-features = false, features = ["psp34", "ownable"] }
+#Buenas! Hay un bug en el generador de templates de OpenBrush parece. La URL es: https://github.com/Brushfam/openbrush-contracts?tag=4.0.0-beta
+
+#quedó un typo en el tag name: hay que remover la "v" delante del 4.
+[lib]
+name = "my_psp34"
+path = "lib.rs"
+
+
+[features]
+default = ["std"]
+std = ["ink/std", "scale/std", "scale-info/std", "openbrush/std"]
+ink-as-dependency = [] 
