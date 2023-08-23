@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@astar-network/swanky-cli": "^3.0.4"
+  }
+}
