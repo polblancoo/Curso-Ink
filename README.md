@@ -19,6 +19,7 @@ Storage avanzado
 Eventos
 OpenBrush & Swanky
 (CrossContract)
+
 Clase 4:
 Llamadas Cross-Contract
 Traits con OpenBrush
