@@ -12,13 +12,13 @@ Tipos y funciones nativas de ink!
 Mensajes (query/tx)
 Introducción a Storage
 Implementación de contratos
-(Voting) y (VotinII)
+(voting) 
 
 Clase 3:
 Storage avanzado
 Eventos
 OpenBrush & Swanky
-(CrossContract)
+(voting_mapping) y (voting_mappingII)
 
 Clase 4:
 Llamadas Cross-Contract
