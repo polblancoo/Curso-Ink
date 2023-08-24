@@ -16,6 +16,8 @@ scale-info = { version = "2.6", default-features = false, features = [
 ], optional = true }
 #voting = { path = "../voting", default-features = false, features = ["ink-as-dependency",] }
 Voting = { path = "../votantes", default-features = false, features = ["ink-as-dependency",] }
+#psp34_lop= { path = "../psp34_lop", default-features = false,optional = true features = ["ink-as-dependency",] }
+
 
 [dev-dependencies]
 ink_e2e = "4.2.0"

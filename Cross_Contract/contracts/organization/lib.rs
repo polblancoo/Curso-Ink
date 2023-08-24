@@ -11,12 +11,15 @@ mod organization {
         },
         selector_bytes,
     };
-    //use voting::VotingRef;
+    //reference to voting::VotingRef;
     use Voting::VotantesRef;
+    //Reference to psp34_lop
+    use psp34_lop::psp34_lopRef;
 
     #[ink(storage)]
     pub struct Organization {
         voting_contract: VotantesRef,
+        psp34: 
     }
 
     impl Organization {

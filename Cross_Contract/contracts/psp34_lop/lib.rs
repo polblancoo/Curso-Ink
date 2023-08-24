@@ -1,9 +1,12 @@
 #![cfg_attr(not(feature = "std"), no_std, no_main)]
 
-        
+    //pub use self::Voting::VotantesRef;
+//pub use self::psp34_lop::psp34_lopRef;
+pub use self::psp34_lop::psp34_lopRef;
+
 #[openbrush::implementation(PSP34, PSP34Mintable)]
 #[openbrush::contract]
-pub mod my_psp34 {
+pub mod psp34_lop {
     use openbrush::traits::Storage;
 
     #[ink(storage)]
