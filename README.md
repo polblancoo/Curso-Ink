@@ -4,6 +4,7 @@ Curso 2023 Introduccion a Ink !
 Clase 1:
 Introducción a Polkadot, Substrate e ink!
 Configuración de entorno para Rust e ink!
+(Flipper)
 
 Clase 2:
 Herramientas de Rust para reutilizar
@@ -11,12 +12,12 @@ Tipos y funciones nativas de ink!
 Mensajes (query/tx)
 Introducción a Storage
 Implementación de contratos
-
+(Voting) y (voutinII)
 Clase 3:
 Storage avanzado
 Eventos
 OpenBrush & Swanky
-
+(CrosContract)
 Clase 4:
 Llamadas Cross-Contract
 Traits con OpenBrush
