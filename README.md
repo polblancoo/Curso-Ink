@@ -12,7 +12,7 @@ Tipos y funciones nativas de ink!
 Mensajes (query/tx)
 Introducción a Storage
 Implementación de contratos
-(Voting) y (voutinII)
+(Voting) y (VotinII)
 
 Clase 3:
 Storage avanzado
