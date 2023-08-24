@@ -23,6 +23,8 @@ OpenBrush & Swanky
 Clase 4:
 Llamadas Cross-Contract
 Traits con OpenBrush
+(CrossContract)
+
 
 Clase 5:
 Chain Extensions
