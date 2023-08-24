@@ -13,11 +13,12 @@ Mensajes (query/tx)
 Introducción a Storage
 Implementación de contratos
 (Voting) y (voutinII)
+
 Clase 3:
 Storage avanzado
 Eventos
 OpenBrush & Swanky
-(CrosContract)
+(CrossContract)
 Clase 4:
 Llamadas Cross-Contract
 Traits con OpenBrush
