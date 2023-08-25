@@ -12,7 +12,6 @@ scale = { package = "parity-scale-codec", version = "3", default-features = fals
 scale-info = { version = "2.6", default-features = false, features = ["derive"], optional = true }
 
 
-
 #openbrush_contracts = { version ="2.2.0", features = ["psp34", "ownable"] }
 openbrush = { tag = "4.0.0-beta", git = "https://github.com/Brushfam/openbrush-contracts?tag=4.0.0-beta", default-features = false, features = ["psp34", "ownable"] }
 #openbrush = { path = "../..", default-features = false, features = ["psp34", "ownable"] }
