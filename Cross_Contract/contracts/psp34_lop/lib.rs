@@ -3,8 +3,9 @@ pub mod psp34_lop_organization;
 
 //           nombreModulo::NombreStruct+Ref  
 pub use self::psp34_lop::ContractRef;
+//pub use self::psp34_lop::Contract;
 
-    
+
 #[openbrush::implementation(PSP34, PSP34Mintable)]
 #[openbrush::contract]
 pub mod psp34_lop {
@@ -14,8 +15,8 @@ pub mod psp34_lop {
 
      
     #[ink(storage)]
-    #[derive(Default, Storage)]
-    // #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))] 
+    #[derive(Default, Storage, )]
+    //#[derive(scale_info::TypeInfo)] 
     pub struct Contract {
     	#[storage_field]
 		psp34: psp34::Data,

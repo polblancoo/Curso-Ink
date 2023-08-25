@@ -2,7 +2,8 @@
 use ink::{ env::{DefaultEnvironment, Environment},
          primitives::AccountId,
 };
- //********************** */
+ //pub mod psp34_lop::Contract;
+  //********************** */
  #[derive(PartialEq, Debug, scale::Encode, scale::Decode)]
  #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
  pub enum ContractError {
@@ -14,7 +15,8 @@ use ink::{ env::{DefaultEnvironment, Environment},
  #[ink::trait_definition]
 pub trait psp34_lop_organization {
 
-    #[ink(message)]
+   
+   #[ink(message)]
     fn mint_token(&mut self) -> bool ;
 
 }
