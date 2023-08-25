@@ -1,19 +1,27 @@
 #![cfg_attr(not(feature = "std"), no_std, no_main)]
+pub mod psp34_lop_organization;
 
-        
+//           nombreModulo::NombreStruct+Ref  
+pub use self::psp34_lop::ContractRef;
+
+    
 #[openbrush::implementation(PSP34, PSP34Mintable)]
 #[openbrush::contract]
-pub mod my_psp34 {
+pub mod psp34_lop {
+
+    use crate::psp34_lop_organization::psp34_lop_organization;
     use openbrush::traits::Storage;
 
+     
     #[ink(storage)]
     #[derive(Default, Storage)]
+    // #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))] 
     pub struct Contract {
     	#[storage_field]
 		psp34: psp34::Data,
 		next_id: u8,
     }
-    
+     // Implementa el trait psp34_lop_organization para el contrato Votantes
     impl Contract {
         #[ink(constructor)]
         pub fn new() -> Self {
@@ -29,4 +37,15 @@ pub mod my_psp34 {
             Ok(())
         }
     }
+    impl psp34_lop_organization for Contract  {
+        
+        #[ink(message)]
+        fn mint_token(&mut self) -> bool {
+            true
+        } 
+    }
+  
+    
+    
+     
 }

@@ -11,17 +11,24 @@ mod organization {
         },
         selector_bytes,
     };
-    //use voting::VotingRef;
+    //use voting::VotantesgRef;
     use Voting::VotantesRef;
+    //Reference to psp34_lop
+    use psp34_lop::ContractRef;
+
+    //* *************** 
+    
+    //*****************/
 
     #[ink(storage)]
     pub struct Organization {
         voting_contract: VotantesRef,
+        psp34_contract: ContractRef,
     }
 
     impl Organization {
         #[ink(constructor)]
-        pub fn new_with_ref(voting_contract_code_hash: Hash) -> Self {
+        pub fn new_with_ref(voting_contract_code_hash: Hash, psp34_contract_code_hash: Hash) -> Self {
             let caller = Self::env().caller();
             Self {
                 voting_contract: VotantesRef::new(caller)
@@ -29,6 +36,11 @@ mod organization {
                     .endowment(0)
                     .salt_bytes(Vec::new()) // Sequence of bytes
                     .instantiate(),
+                psp34_contract: ContractRef::new()
+                    .code_hash(psp34_contract_code_hash)
+                    .endowment(0)
+                    .salt_bytes(Vec::new()) // Sequence of bytes
+                    .instantiate(),    
             }
         }
 
@@ -63,11 +75,17 @@ mod organization {
         pub fn add_voters_with_ref(&mut self, candidate: AccountId)-> bool {
            // let candidate = Self::env().caller();
             match self.voting_contract.add_voter(candidate){
-                Ok(true) => {
+                Ok(true ) => {
                     //emitir evento
                     todo!();
                     true
                 },
+                Err(err)=> {
+                    //emitir evento
+                    todo!();
+                    false
+
+                }
                 _ => {
                     //emitir evento
                     todo!();
@@ -75,6 +93,48 @@ mod organization {
                 },
             }
         }
+        pub fn remove_voter_with_ref(&mut self, candidate: AccountId) ->  bool {
+            // let candidate = Self::env().caller();
+             match self.voting_contract.remove_voter (candidate){
+                 Ok(true) => {
+                     //emitir evento
+                     todo!();
+                     true
+                 },
+                 Err(err)=> {
+                    //emitir evento
+                    todo!();
+                    false
+
+                }
+                 _ => {
+                     //emitir evento
+                     todo!();
+                     false
+                 },
+             }
+         }
+        pub fn change_admin_with_ref (&mut self, new_admin: AccountId) ->bool{
+            match self.voting_contract.change_admin ( new_admin){
+                Ok(true) => {
+                    //emitir evento
+                    todo!();
+                    true
+                },
+                Err(err)=> {
+                   //emitir evento
+                   todo!();
+                   false
+
+               }
+                _ => {
+                    //emitir evento
+                    todo!();
+                    false
+                },
+            }
+        }
+
 //**************************************** */
       /*   #[ink(message)]
         pub fn vote_with_builder(
