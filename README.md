@@ -1,4 +1,4 @@
-# Curso-Ink
+🦑 ink-examples
 Curso 2023 Introduccion a Ink !
 
 Clase 1:
