@@ -2,6 +2,7 @@
 use ink::{ env::{DefaultEnvironment, Environment},
          primitives::AccountId,
 };
+
  //pub mod psp34_lop::Contract;
   //********************** */
  #[derive(PartialEq, Debug, scale::Encode, scale::Decode)]
@@ -12,11 +13,11 @@ use ink::{ env::{DefaultEnvironment, Environment},
         
 }
 
- #[ink::trait_definition]
+#[ink::trait_definition]
 pub trait psp34_lop_organization {
 
    
-   #[ink(message)]
-    fn mint_token(&mut self) -> bool ;
+    #[ink(message)]
+    fn mint_token(&mut self, Voter_de: AccountId) -> bool ;
 
 }

@@ -3,7 +3,7 @@ pub mod psp34_lop_organization;
 
 //           nombreModulo::NombreStruct+Ref  
 pub use self::psp34_lop::ContractRef;
-//pub use self::psp34_lop::Contract;
+
 
 
 #[openbrush::implementation(PSP34, PSP34Mintable)]
@@ -11,12 +11,12 @@ pub use self::psp34_lop::ContractRef;
 pub mod psp34_lop {
 
     use crate::psp34_lop_organization::psp34_lop_organization;
+   // use ink::primitives::AccountId;
     use openbrush::traits::Storage;
 
      
     #[ink(storage)]
     #[derive(Default, Storage, )]
-    //#[derive(scale_info::TypeInfo)] 
     pub struct Contract {
     	#[storage_field]
 		psp34: psp34::Data,
@@ -32,7 +32,7 @@ pub mod psp34_lop {
         }
 
 		#[ink(message)]
-        pub fn mint_token(&mut self) -> Result<(), PSP34Error> {
+        pub fn mint_token_r(&mut self, Voter_de_openb: AccountId) -> Result<(), PSP34Error> {
             psp34::Internal::_mint_to(self, Self::env().caller(), Id::U8(self.next_id))?;
             self.next_id += 1;
             Ok(())
@@ -41,12 +41,10 @@ pub mod psp34_lop {
     impl psp34_lop_organization for Contract  {
         
         #[ink(message)]
-        fn mint_token(&mut self) -> bool {
+        fn mint_token(&mut self,Voter_de: AccountId) -> bool {
+            let Voter_de_openb = Voter_de  as AccountId;
+            let r = self.mint_token_r( Voter_de_openb );
             true
         } 
     }
-  
-    
-    
-     
 }
