@@ -14,8 +14,7 @@ mod organization {
     //use voting::VotantesgRef;
     use Voting::VotantesRef;
     //Reference to psp34_lop
-    //use psp34_lop::psp34_lop_organization::
-     use psp34_lop::ContractRef;
+    use psp34_lop::ContractRef;
     //* *************** 
     
     //*****************/
@@ -36,6 +35,7 @@ mod organization {
                     .endowment(0)
                     .salt_bytes(Vec::new()) // Sequence of bytes
                     .instantiate(),
+                   
                 psp34_contract: ContractRef::new()
                     .code_hash(psp34_contract_code_hash)
                     .endowment(0)
@@ -61,7 +61,14 @@ mod organization {
         #[ink(message)]
         pub fn vote_with_ref(&mut self, candidate: AccountId)-> bool {
             //se emite un voto por vez.
-            self.voting_contract.vote(candidate, 1)
+            if self.voting_contract.vote(candidate, 1){
+               
+                self.psp34_contract.mint_token(&mut self , candidate);
+                true
+                
+            }else{
+                false
+            }
         }
 
         #[ink(message)]
@@ -81,7 +88,7 @@ mod organization {
                     //emitir evento
                    // todo!();
                     true
-                },
+                }
                 Err(err)=> {
                     //emitir evento
                   //  todo!();
@@ -92,7 +99,7 @@ mod organization {
                     //emitir evento
                    // todo!();
                     false
-                },
+                }
             }
         }
         #[ink(message)]
@@ -103,7 +110,7 @@ mod organization {
                      //emitir evento
                    //  todo!();
                      true
-                 },
+                 }
                  Err(err)=> {
                     //emitir evento
                   //  todo!();
@@ -114,7 +121,7 @@ mod organization {
                      //emitir evento
                    //  todo!();
                      false
-                 },
+                 }
              }
          }
          #[ink(message)]
@@ -124,7 +131,7 @@ mod organization {
                     //emitir evento
                    // todo!();
                     true
-                },
+                }
                 Err(err)=> {
                    //emitir evento
                  //  todo!();
@@ -135,7 +142,7 @@ mod organization {
                     //emitir evento
                   //  todo!();
                     false
-                },
+                }
             }
         }
 
