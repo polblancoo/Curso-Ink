@@ -1,20 +1,17 @@
 #![cfg_attr(not(feature = "std"), no_std, no_main)]
-pub mod psp34_lop_organization;
 
-//           nombreModulo::NombreStruct+Ref  
-pub use self::psp34_lop::ContractRef;
+pub use crate::psp34_lop::ContractRef;
 
 
 
 #[openbrush::implementation(PSP34, PSP34Mintable)]
 #[openbrush::contract]
 pub mod psp34_lop {
-
-    use crate::psp34_lop_organization::psp34_lop_organization;
-   // use ink::primitives::AccountId;
+   
+   // use crate::psp34_lop_organization::psp34_lop_organization;
     use openbrush::traits::Storage;
 
-     
+   
     #[ink(storage)]
     #[derive(Default, Storage, )]
     pub struct Contract {
@@ -38,13 +35,16 @@ pub mod psp34_lop {
             Ok(())
         }
     }
-    impl psp34_lop_organization for Contract  {
+    /* impl psp34_lop_organization for Contract  {
         
         #[ink(message)]
         fn mint_token(&mut self,Voter_de: AccountId) -> bool {
             let Voter_de_openb = Voter_de  as AccountId;
-            let r = self.mint_token_r( Voter_de_openb );
-            true
+            match  self.mint_token_r( Voter_de_openb ){
+                 Ok(_)=> {true}
+                Err(_)=> {false}
+                _=> {false}
+            }
         } 
-    }
+    } */
 }

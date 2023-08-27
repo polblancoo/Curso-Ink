@@ -5,9 +5,9 @@ pub use self::Voting::VotantesRef;
  
 
  #[ink::contract]
- mod Voting {
+ pub mod Voting {
     
-   use crate::voting_organizacion::{VotingOrganization, ContractError} ;
+    use crate::voting_organizacion::{VotingOrganization, ContractError} ;
     use ink::storage::Mapping;
     
     //Eventos
@@ -199,11 +199,11 @@ pub use self::Voting::VotantesRef;
       // Implementa el trait VotingOrganization para el contrato Votantes
       impl VotingOrganization for Votantes {
        
-        #[ink(message)]
-        fn vote(&mut self, voter_to: AccountId, value: i32) -> bool {
-              // Implementa la lógica de votación específica del contrato aquí
-             self.vote( voter_to , value)
-          }
+            #[ink(message)]
+            fn vote(&mut self, voter_to: AccountId, value: i32) -> bool {
+                // Implementa la lógica de votación específica del contrato aquí
+                self.vote( voter_to , value)
+            }
           #[ink(message)]
           fn get_votes(&self, voter: AccountId) -> i32{
            // let from = Self::env().caller();
@@ -211,7 +211,7 @@ pub use self::Voting::VotantesRef;
            }
            #[ink(message)]
             fn add_voter(&mut self, voter: AccountId)-> bool {
-             match self.add_voter(voter){
+            match self.add_voter(voter){
                  Ok(true) => {true },
                  Ok(false) => {false},
                  Err(_) =>{false}
@@ -226,9 +226,18 @@ pub use self::Voting::VotantesRef;
                 Err(_) =>{false}
             }
            }
+           #[ink(message)]
+           fn change_admin(&mut self, new_admin: AccountId) ->bool{
+            match self.change_admin(new_admin){
+                Ok(true) => {true },
+                Ok(false) => {false},
+                Err(_) =>{false}   
 
+            }
 
-      }
+             }
+
+    }
        //********************** 
 
 // Pruebas unitarias

@@ -19,7 +19,7 @@ openbrush = { tag = "4.0.0-beta", git = "https://github.com/Brushfam/openbrush-c
 
 #quedó un typo en el tag name: hay que remover la "v" delante del 4.
 [lib]
-name = "psp34_lop"
+#name = "psp34_lop"
 path = "lib.rs"
 
 

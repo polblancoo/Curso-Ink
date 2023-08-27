@@ -1,8 +1,12 @@
 #![cfg_attr(not(feature = "std"), no_std, no_main)]
 
+//pub use psp34_lop::ContractRef;
+
 #[cfg_attr(feature = "cargo-clippy", allow(clippy::new_without_default))]
 #[ink::contract]
 mod organization {
+    
+
     use ink::prelude::vec::Vec;
     use ink::{
         env::{
@@ -15,17 +19,19 @@ mod organization {
     use Voting::VotantesRef;
     //Reference to psp34_lop
     use psp34_lop::ContractRef;
-    //* *************** 
     
-    //*****************/
-
+    
+   
     #[ink(storage)]
     pub struct Organization {
         voting_contract: VotantesRef,
-        psp34_contract: ContractRef,
+        psp34_contract: ContractRef
     }
 
     impl Organization {
+
+        
+
         #[ink(constructor)]
         pub fn new_with_ref(admin_voters: AccountId,voting_contract_code_hash: Hash, psp34_contract_code_hash: Hash) -> Self {
             let caller = Self::env().caller();
@@ -44,28 +50,20 @@ mod organization {
             }
         }
 
-        /* #[ink(constructor)]
-        pub fn new_with_builder(voting_contract_code_hash: Hash) -> Self {
-            Self {
-                voting_contract: build_create::<VotingRef>()
-                    .code_hash(voting_contract_code_hash)
-                    .gas_limit(0)
-                    .endowment(0)
-                    .exec_input(ExecutionInput::new(Selector::new(selector_bytes!("new"))))
-                    .salt_bytes(Vec::new()) // Sequence of bytes
-                    .returns::<VotingRef>()
-                    .instantiate(),
-            }
-        }
- */
+        
         #[ink(message)]
         pub fn vote_with_ref(&mut self, candidate: AccountId)-> bool {
             //se emite un voto por vez.
             if self.voting_contract.vote(candidate, 1){
                
-                self.psp34_contract.mint_token(&mut self , candidate);
-                true
+                let r = self.psp34_contract.mint_token_r( candidate);
+               
+                 match r{
+                    Ok(()) => {true}
+                    _ => {false}
+                }
                 
+                                
             }else{
                 false
             }
@@ -82,24 +80,9 @@ mod organization {
         pub fn add_voters_with_ref(&mut self, candidate: AccountId)-> bool {
            // let candidate = Self::env().caller();
             match self.voting_contract.add_voter(candidate){
-                Ok(true ) => {
-                    //Mint nft
-                    
-                    //emitir evento
-                   // todo!();
-                    true
-                }
-                Err(err)=> {
-                    //emitir evento
-                  //  todo!();
-                    false
-
-                }
-                _ => {
-                    //emitir evento
-                   // todo!();
-                    false
-                }
+                Ok(true ) => {true}
+                Err(err)=> {false }
+                _ => {false}
             }
         }
         #[ink(message)]

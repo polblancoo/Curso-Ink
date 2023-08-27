@@ -19,6 +19,8 @@ scale-info = { version = "2.6", default-features = false, features = [
 #] }
 Voting = { path = "../votantes", default-features = false, features = ["ink-as-dependency",] }
 psp34_lop= { path = "../psp34_lop", default-features = false,  features = ["ink-as-dependency",] }
+openbrush = { tag = "4.0.0-beta", git = "https://github.com/Brushfam/openbrush-contracts?tag=4.0.0-beta", default-features = false, features = ["psp34", "ownable"] }
+#
 
 [dev-dependencies]
 ink_e2e = "4.2.0"

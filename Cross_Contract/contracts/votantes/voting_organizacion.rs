@@ -1,5 +1,3 @@
-// Archivo: voting_organizacion.rs
-
 #![cfg_attr(not(feature = "std"), no_std)]
 use ink::{ env::{DefaultEnvironment, Environment},
          primitives::AccountId,
@@ -29,5 +27,7 @@ pub trait VotingOrganization {
      fn add_voter(&mut self, voter: AccountId) -> bool ;
      #[ink(message)]
      fn remove_voter(&mut self, voter: AccountId) ->bool;
+     #[ink(message)]
+     fn change_admin(&mut self, voter: AccountId) ->bool;
 }
 
