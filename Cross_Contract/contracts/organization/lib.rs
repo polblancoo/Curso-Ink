@@ -2,6 +2,7 @@
 
 //pub use psp34_lop::ContractRef;
 
+
 #[cfg_attr(feature = "cargo-clippy", allow(clippy::new_without_default))]
 #[ink::contract]
 mod organization {
@@ -17,6 +18,8 @@ mod organization {
     };
     //use voting::VotantesgRef;
     use Voting::VotantesRef;
+    use Voting::voting_organizacion::VotingOrganization;
+    
     //Reference to psp34_lop
     use psp34_lop::ContractRef;
     
@@ -88,18 +91,14 @@ mod organization {
         #[ink(message)]
         pub fn remove_voter_with_ref(&mut self, candidate: AccountId) ->  bool {
             // let candidate = Self::env().caller();
-             match self.voting_contract.remove_voter (candidate){
-                 Ok(true) => {
+            //self.voting_contract.remove_voter_trait(candidate);
+             match self.voting_contract.remove_voter_trait (candidate){
+                 true => {
                      //emitir evento
                    //  todo!();
                      true
                  }
-                 Err(err)=> {
-                    //emitir evento
-                  //  todo!();
-                    false
-
-                }
+                 
                  _ => {
                      //emitir evento
                    //  todo!();
@@ -109,6 +108,7 @@ mod organization {
          }
          #[ink(message)]
         pub fn change_admin_with_ref (&mut self, new_admin: AccountId) ->bool{
+          
             match self.voting_contract.change_admin ( new_admin){
                 Ok(true) => {
                     //emitir evento
@@ -149,4 +149,7 @@ mod organization {
 /* 
      */
     }
+    
+  //********************************** */
+    
 }
