@@ -85,12 +85,16 @@ pub mod Voting {
 
         #[ink(message)]
         pub fn add_voter(&mut self, voter: AccountId) ->  Result<bool, ContractError> {
+            let caller = Self::env().caller();
+            
+            ink::env::debug_println!("Caller : {:#?}, add voter {:#?}", caller, voter);
             self.ensure_admin()?;
+             ink::env::debug_println!("pasamos admin");
+           
            // if self.is_voter(&voter) {
            //     return Err(ContractError::YouAreNotVoter);
            // }
             //self.voters.insert(voter, &0);
-            self.enabled_voter.insert(voter, &());
             //emite evento.
             self.env().emit_event(NewVoter { voter });
             //devuelve OK(bool o Err ), por el Result
@@ -201,9 +205,9 @@ pub mod Voting {
       impl VotingOrganization for Votantes {
        
             #[ink(message)]
-            fn vote_trait(&mut self, voter_to: AccountId, value: i32) -> bool {
+            fn vote_trait(&mut self , voter: AccountId, value: i32 )-> bool {
                 // Implementa la lógica de votación específica del contrato aquí
-                self.vote( voter_to , value)
+                self.vote( voter , value)
             }
           #[ink(message)]
           fn get_votes_trait(&self, voter: AccountId) -> i32{
@@ -211,7 +215,7 @@ pub mod Voting {
             self.get_votes( voter)
            }
            #[ink(message)]
-            fn add_voter(&mut self, voter: AccountId)-> bool {
+            fn add_voter_tr(&mut self, caller: AccountId , voter: AccountId)-> bool {
             match self.add_voter(voter){
                  Ok(true) => {true },
                  Ok(false) => {false},
@@ -220,7 +224,7 @@ pub mod Voting {
            }
           
            #[ink(message)]
-           fn remove_voter_trait(&mut self, voter: AccountId) ->bool{
+           fn remove_voter_trait(&mut self, caller: AccountId , voter: AccountId) ->bool{
             match self.remove_voter(voter){
                 Ok(true) => {true },
                 Ok(false) => {false},
