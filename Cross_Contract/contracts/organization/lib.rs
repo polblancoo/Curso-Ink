@@ -80,19 +80,19 @@ mod organization {
         }
         
         #[ink(message)]
-        pub fn add_voters_with_ref(&mut self, candidate: AccountId)-> bool {
+        pub fn add_voters_with_ref(&mut self, caller: AccountId, candidate: AccountId)-> bool {
            // let candidate = Self::env().caller();
-            match self.voting_contract.add_voter(candidate){
-                Ok(true ) => {true}
-                Err(err)=> {false }
+            match self.voting_contract.add_voter_trait( caller, candidate){
+                true  => {true}
+                err=> {false }
                 _ => {false}
             }
         }
         #[ink(message)]
-        pub fn remove_voter_with_ref(&mut self, candidate: AccountId) ->  bool {
+        pub fn remove_voter_with_ref(&mut self,caller: AccountId, candidate: AccountId) ->  bool {
             // let candidate = Self::env().caller();
             //self.voting_contract.remove_voter_trait(candidate);
-             match self.voting_contract.remove_voter_trait (candidate){
+             match self.voting_contract.remove_voter_trait (caller, candidate){
                  true => {
                      //emitir evento
                    //  todo!();

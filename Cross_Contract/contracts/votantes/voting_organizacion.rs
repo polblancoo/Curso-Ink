@@ -24,7 +24,7 @@ pub trait VotingOrganization {
     fn get_votes_trait(&self, voter: AccountId) -> i32;
 
     #[ink(message)]
-     fn add_voter_tr(&mut self, caller: AccountId, voter: AccountId) -> bool ;
+     fn add_voter_trait(&mut self, caller: AccountId, voter: AccountId) -> bool ;
 
      #[ink(message)]
      fn remove_voter_trait(&mut self, caller: AccountId , voter: AccountId) ->bool;

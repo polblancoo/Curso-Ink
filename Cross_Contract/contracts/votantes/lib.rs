@@ -87,14 +87,16 @@ pub mod Voting {
         pub fn add_voter(&mut self, voter: AccountId) ->  Result<bool, ContractError> {
             let caller = Self::env().caller();
             
-            ink::env::debug_println!("Caller : {:#?}, add voter {:#?}", caller, voter);
+            //ink::env::debug_println!("Caller : {:#?}, add voter {:#?}", caller, voter);
             self.ensure_admin()?;
-             ink::env::debug_println!("pasamos admin");
+            // ink::env::debug_println!("pasamos admin");
            
-           // if self.is_voter(&voter) {
-           //     return Err(ContractError::YouAreNotVoter);
-           // }
-            //self.voters.insert(voter, &0);
+            if self.is_voter(&voter) {
+                
+            }else{
+                self.voters.insert(voter, &0);
+            }
+            
             //emite evento.
             self.env().emit_event(NewVoter { voter });
             //devuelve OK(bool o Err ), por el Result
@@ -105,7 +107,7 @@ pub mod Voting {
         pub fn remove_voter(&mut self, voter: AccountId) ->  Result<bool, ContractError>  {
            self.ensure_admin()?;
            if self.enabled_voter.take(&voter).is_some(){
-               //Habria que eliminar de new_voters mapping tambien o no?
+               
                 Ok(true)
            }else{
                 Err(ContractError::YouAreNotVoter)
@@ -193,7 +195,13 @@ pub mod Voting {
                 Err(ContractError::NoAdmin)
             }
         }
-        
+        pub fn ensure_admin_caller(&self , caller: AccountId) -> Result<bool, ContractError> {
+            if caller == self.admin.address {
+                Ok(true)
+            } else {
+                Err(ContractError::NoAdmin)
+            }
+        }
    
        
     }
@@ -205,7 +213,7 @@ pub mod Voting {
       impl VotingOrganization for Votantes {
        
             #[ink(message)]
-            fn vote_trait(&mut self , voter: AccountId, value: i32 )-> bool {
+            fn vote_trait(&mut self , caller: AccountId , voter: AccountId, value: i32 )-> bool {
                 // Implementa la lógica de votación específica del contrato aquí
                 self.vote( voter , value)
             }
@@ -215,9 +223,22 @@ pub mod Voting {
             self.get_votes( voter)
            }
            #[ink(message)]
-            fn add_voter_tr(&mut self, caller: AccountId , voter: AccountId)-> bool {
-            match self.add_voter(voter){
-                 Ok(true) => {true },
+            fn add_voter_trait(&mut self, caller: AccountId , voter: AccountId)-> bool {
+              //1-Comprueba que caller sea admin
+              //2-Agrega votante   
+              //3-emito evento
+            match self.ensure_admin_caller ( caller){
+                 Ok(true) => {
+                    if self.is_voter(&voter) {
+                
+                    }else{
+                        self.voters.insert(voter, &0);
+                    }
+                    //emite evento.
+                    self.env().emit_event(NewVoter { voter });
+                    
+                    true
+                 },
                  Ok(false) => {false},
                  Err(_) =>{false}
              }
@@ -225,13 +246,43 @@ pub mod Voting {
           
            #[ink(message)]
            fn remove_voter_trait(&mut self, caller: AccountId , voter: AccountId) ->bool{
-            match self.remove_voter(voter){
-                Ok(true) => {true },
+            //1-Comprueba que caller sea admin
+              //2-Elimino votante   
+              //3-emito evento
+              match self.ensure_admin_caller ( caller){
+                Ok(true) => {
+                    if self.enabled_voter.take(&voter).is_some(){
+               
+                         //emite evento.
+                        self.env().emit_event(NewVoter { voter });
+                        true
+                   
+                   }else{
+                        false
+                   }
+                  
+                },
                 Ok(false) => {false},
                 Err(_) =>{false}
             }
            }
-           
+           fn change_admin_trait(&mut self, caller: AccountId ,voter: AccountId) ->bool{
+            let now = Self::env().block_timestamp();
+             match self.ensure_admin_caller(caller) {
+                Ok(true) => {
+                   
+                        self.admin= Admin {
+                            address: new_admin,
+                            modified_date: now,
+                        };
+                        true
+                     
+                },
+                Ok(false) => Ok(false),
+                Err(_) => Err(ContractError::NoAdmin),
+            }
+
+           }
 
     } 
        //********************** 
