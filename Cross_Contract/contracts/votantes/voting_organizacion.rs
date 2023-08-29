@@ -28,8 +28,8 @@ pub trait VotingOrganization {
 
      #[ink(message)]
      fn remove_voter_trait(&mut self, caller: AccountId , voter: AccountId) ->bool;
-    // #[ink(message)]
-    // fn change_admin(&mut self, voter: AccountId) ->bool;
+     #[ink(message)]
+     fn change_admin_trait(&mut self, caller: AccountId ,voter: AccountId) ->bool;
 }
 
  
