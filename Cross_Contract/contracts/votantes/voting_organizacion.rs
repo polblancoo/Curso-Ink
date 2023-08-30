@@ -18,7 +18,7 @@ use ink::{ env::{DefaultEnvironment, Environment},
 pub trait VotingOrganization {
     
     #[ink(message)]
-    fn vote_trait(&mut self , caller: AccountId , voter: AccountId, value: i32)  -> bool;
+    fn vote_trait(&mut self , caller: AccountId , voter: AccountId)  -> bool;
    
     #[ink(message)]
     fn get_votes_trait(&self, voter: AccountId) -> i32;
@@ -28,8 +28,8 @@ pub trait VotingOrganization {
 
      #[ink(message)]
      fn remove_voter_trait(&mut self, caller: AccountId , voter: AccountId) ->bool;
-     #[ink(message)]
-     fn change_admin_trait(&mut self, caller: AccountId ,voter: AccountId) ->bool;
+    // #[ink(message)]
+    // fn change_admin_trait(&mut self, caller: AccountId ,voter: AccountId) ->bool;
 }
 
  
