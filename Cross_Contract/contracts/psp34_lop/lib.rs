@@ -8,8 +8,10 @@ pub use crate::psp34_lop::ContractRef;
 #[openbrush::contract]
 pub mod psp34_lop {
    
-   // use crate::psp34_lop_organization::psp34_lop_organization;
-    use openbrush::traits::Storage;
+  // use ink::primitives::AccountId;
+
+// use crate::psp34_lop_organization::psp34_lop_organization;
+    use openbrush::{traits::Storage, contracts::psp34};
 
    
     #[ink(storage)]
@@ -17,6 +19,7 @@ pub mod psp34_lop {
     pub struct Contract {
     	#[storage_field]
 		psp34: psp34::Data,
+        
 		next_id: u8,
     }
      // Implementa el trait psp34_lop_organization para el contrato Votantes
@@ -32,8 +35,18 @@ pub mod psp34_lop {
         pub fn mint_token_r(&mut self, Voter_de_openb: AccountId) -> Result<(), PSP34Error> {
             psp34::Internal::_mint_to(self, Self::env().caller(), Id::U8(self.next_id))?;
             self.next_id += 1;
+            
             Ok(())
         }
+        #[ink(message)]
+        pub fn total_psp34_lop(& self)-> Result<u128, PSP34Error> {
+        let a:u128 = psp34::BalancesManager::_total_supply( self);
+        
+            Ok((a))
+        }
+        
+       
+        
     }
     /* impl psp34_lop_organization for Contract  {
         

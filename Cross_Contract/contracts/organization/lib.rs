@@ -1,12 +1,13 @@
 #![cfg_attr(not(feature = "std"), no_std, no_main)]
 
-//pub use psp34_lop::ContractRef;
+
 
 
 #[cfg_attr(feature = "cargo-clippy", allow(clippy::new_without_default))]
 #[ink::contract]
 mod organization {
     
+    //use openbrush::{contracts::psp34::*};
 
     use ink::prelude::vec::Vec;
     use ink::{
@@ -16,6 +17,8 @@ mod organization {
         },
         selector_bytes,
     };
+
+     
     //use voting::VotantesgRef;
     use Voting::VotantesRef;
     use Voting::voting_organizacion::VotingOrganization;
@@ -23,7 +26,13 @@ mod organization {
     //Reference to psp34_lop
     use psp34_lop::ContractRef;
     
-    
+    //Eventos
+    #[ink(event)]
+    pub struct NewVoter_Mint {
+        #[ink(topic)]
+          voter: AccountId,
+        
+    }
    
     #[ink(storage)]
     pub struct Organization {
@@ -52,17 +61,32 @@ mod organization {
                     .instantiate(),    
             }
         }
-
+        #[ink(message)]
+        pub fn total_mint_psp34_lop(&mut self)->u128{
+            let t = self.psp34_contract.total_psp34_lop( );
+            match t{
+                Ok((t))=>{t},
+                Err(_)=>{0}
+            }  
+        }
         
         #[ink(message)]
         pub fn vote_with_ref(&mut self, candidate: AccountId)-> bool {
             //se emite un voto por vez.
-            if self.voting_contract.vote(candidate, 1){
-               
-                let r = self.psp34_contract.mint_token_r( candidate);
-               
+            let caller = self.env().caller();
+            if self.voting_contract.vote_trait(caller , candidate){
+               //se mintea al caller , quien voto 
+                let r: Result<(), _> = self.psp34_contract.mint_token_r( caller);
+                let t = self.psp34_contract.total_psp34_lop( ).unwrap();
                  match r{
-                    Ok(()) => {true}
+                    Ok(())=>{
+                      
+                    //emite evento
+                   // self.env().emit_event(Transfer { from, to, id });
+                   //self.env().emit_event( NewVoter_Mint{  caller});
+                        true
+                    
+                    }
                     _ => {false}
                 }
                 
