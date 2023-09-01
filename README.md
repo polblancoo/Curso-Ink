@@ -23,7 +23,7 @@ OpenBrush & Swanky
 Clase 4:
 Llamadas Cross-Contract
 Traits con OpenBrush
-(CrossContract)
+(CrossContract ,  openbrush::psp34 (MInteable))
 
 
 Clase 5:
