@@ -43,22 +43,6 @@ Repaso de Librería Polkadot.js
 Useink (React hooks)
 
 
-Rust & Cargo
-Web: https://www.rust-lang.org/tools/install
-Acción: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-Ink!
-Webs:
-https://use.ink/getting-started/setup/
-https://github.com/paritytech/cargo-contract
-Acciones:
-rustup install 1.72
-rustup default 1.72
-rustup component add rust-src --toolchain 1.72
-rustup target add wasm32-unknown-unknown --toolchain 1.72
-cargo install --force --version 3.2.0 cargo-contract
-Node
-Webs:
-https://github.com/paritytech/substrate-contracts-node
 https://github.com/paritytech/substrate-contracts-node/releases
 Acciones:
 Descargar substrate-contracts-node-linux.tar.gz
