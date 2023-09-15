@@ -21,6 +21,8 @@ mod master {
     use psp34_lop::ContractRef;
 
     use crate::errors;
+
+
     //Eventos
     #[ink(event)]
     pub struct NewVoter_Mint {
@@ -140,23 +142,7 @@ mod master {
        
     }
 
-    /// Unit tests in Rust are normally defined within such a `#[cfg(test)]`
-    /// module and test functions are marked with a `#[test]` attribute.
-    /// The below code is technically just normal Rust code.
-    #[cfg(test)]
-    mod tests {
-        /// Imports all the definitions from the outer scope so we can use them here.
-        use super::*;
-
-        /// We test if the default constructor does its job.
-        #[ink::test]
-        fn default_works() {
-           
-        }
-
-        
-    }
-
+  
 
     /// This is how you'd write end-to-end (E2E) or integration tests for ink! contracts.
     ///
@@ -168,65 +154,100 @@ mod master {
         /// Imports all the definitions from the outer scope so we can use them here.
         use super::*;
 
+        use ink::primitives::AccountId;
         /// A helper function used for calling contract messages.
         use ink_e2e::build_message;
 
         /// The End-to-End test `Result` type.
         type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
+ /// Helper to get Bob's account_id from `ink_e2e::bob()` PairSigner
+    
+ fn get_alice_account_id() -> AccountId {
+
+    let alice = ink_e2e::alice();
+    let alice_id = AccountId::from(alice.public_key().0);
+    alice_id
+
+ }
+ fn get_bob_account_id() -> AccountId {
+
+    let bob = ink_e2e::bob();
+    let bob_id = AccountId::from(bob.public_key().0);
+    bob_id
+
+ } 
+ fn get_charlie_account_id() -> AccountId {
+
+    let charlie = ink_e2e::charlie();
+    let charlie_id = AccountId::from(charlie.public_key().0);
+    charlie_id
+
+ } 
+
+
+
         /// We test that we can upload and instantiate the contract using its default constructor.
         #[ink_e2e::test]
         async fn default_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            // Given
-            let constructor = MasterRef::default();
-
-            // When
-            let contract_account_id = client
-                .instantiate("master", &ink_e2e::alice(), constructor, 0, None)
-                .await
-                .expect("instantiate failed")
-                .account_id;
-
-            // Then
-            let get = build_message::<MasterRef>(contract_account_id.clone())
-                .call(|master| master.get());
-            let get_result = client.call_dry_run(&ink_e2e::alice(), &get, 0, None).await;
-            assert!(matches!(get_result.return_value(), false));
+            // Arrange
+            
+            let psp34_nft_Hash =client
+            .upload("psp34_lop", &ink_e2e::alice(), None)
+            .await
+            .expect("nft contract upload failed")
+            .code_hash; 
+           
+            
+           
+           let alice_id = get_alice_account_id();
+            let votantes_Hash =client
+            .upload("Voting", &ink_e2e::alice(), None)
+            .await
+            .expect("votantes contract upload failed")
+            .code_hash; 
+      
+      
+            let alice_id = get_alice_account_id();
+            let constructor_Master= MasterRef::new(alice_id, 
+                                                         votantes_Hash ,
+                                                        psp34_nft_Hash);
+            let contract_Master_id = client                                                        
+            .instantiate("Organizator", &ink_e2e::alice(), constructor_Master, 0, None)
+            .await
+            .expect("instantiate failed")
+            .account_id;    
+                
+        
+            //Agrega a bob y  charlie  a la lista de votantes
+            let alice_id = get_alice_account_id();    
+            let bob =  get_bob_account_id();
+             let message = build_message::<MasterRef>(contract_Master_id.clone())
+             .call (|MasterRef| MasterRef.add_voters_with_ref(alice_id , bob));  
+            let get_result = client.call_dry_run(&ink_e2e::alice(), &message, 0, None).await;
+            
+            let alice_id = get_alice_account_id();
+            let charlie =  get_charlie_account_id();
+             let message = build_message::<MasterRef>(contract_Master_id.clone())
+             .call (|MasterRef| MasterRef.add_voters_with_ref(alice_id ,charlie));  
+            let get_result = client.call_dry_run(&ink_e2e::alice(), &message, 0, None).await;
+            
+            //bob vota por charlie
+            let charlie =  get_charlie_account_id();
+             let message = build_message::<MasterRef>(contract_Master_id.clone())
+             .call (|MasterRef| MasterRef.vote_with_ref(charlie));  
+            let get_result = client.call_dry_run(&ink_e2e::bob(), &message, 0, None).await;
+                
+            
+            //Veo si charlie tiene votos
+            let message = build_message::<MasterRef>(contract_Master_id.clone())
+            .call (|MasterRef| MasterRef.get_votes_with_ref());  
+           let get_result = client.call_dry_run(&ink_e2e::charlie(), &message, 0, None).await;
+               
+               assert!(get_result , 1);
 
             Ok(())
         }
 
-        /// We test that we can read and write a value from the on-chain contract contract.
-        #[ink_e2e::test]
-        async fn it_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            // Given
-            let constructor = MasterRef::new(false);
-            let contract_account_id = client
-                .instantiate("master", &ink_e2e::bob(), constructor, 0, None)
-                .await
-                .expect("instantiate failed")
-                .account_id;
-
-            let get = build_message::<MasterRef>(contract_account_id.clone())
-                .call(|master| master.get());
-            let get_result = client.call_dry_run(&ink_e2e::bob(), &get, 0, None).await;
-            assert!(matches!(get_result.return_value(), false));
-
-            // When
-            let flip = build_message::<MasterRef>(contract_account_id.clone())
-                .call(|master| master.flip());
-            let _flip_result = client
-                .call(&ink_e2e::bob(), flip, 0, None)
-                .await
-                .expect("flip failed");
-
-            // Then
-            let get = build_message::<MasterRef>(contract_account_id.clone())
-                .call(|master| master.get());
-            let get_result = client.call_dry_run(&ink_e2e::bob(), &get, 0, None).await;
-            assert!(matches!(get_result.return_value(), true));
-
-            Ok(())
-        }
     }
 }
