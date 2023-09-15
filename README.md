@@ -57,7 +57,7 @@ Chain Extensions
 Tests unitarios
 Tests de integración
 Tests E2E
-<strong>Carpeta:</strong> ---->(CrossContract)
+<strong>Carpeta:</strong> ---->(Organization)
 
 <hr style="color: 30056b2;"/>
 <h2>Clase 7:</h2>
