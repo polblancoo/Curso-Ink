@@ -71,3 +71,10 @@ Verificación de contratos on-chain
 Useink (React hooks)
 
 <strong>Carpeta:</strong> ----> ( )
+
+<hr style="color: 30056b2;"/>
+<h2>Staking 9:</h2>
+🦑 <A HREF="https://github.com/polblancoo/Wasm_Contract_Substrate">Staking  </A></br>
+
+
+
