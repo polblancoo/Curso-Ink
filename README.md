@@ -21,7 +21,7 @@ substrate-contracts-node o swanky </br>
 <h2>Clase 1:</h2>
 :hamer:Introducción a Polkadot, Substrate e ink!
 Configuración de entorno para Rust e ink!
-(Flipper)
+<strong>Carpeta:</strong> ---->  (Flipper)
 
 
 <hr style="color: 30056b2;"/>
@@ -31,40 +31,43 @@ Tipos y funciones nativas de ink!
 Mensajes (query/tx)
 Introducción a Storage
 Implementación de contratos
-(voting) 
+<strong>Carpeta:</strong> ---->(voting) 
 
 <hr style="color: 30056b2;"/>
 <h2>Clase 3:</h2>
 :hamer:Storage avanzado
 Eventos
 OpenBrush & Swanky
-(voting_mapping) y (voting_mappingII)
+<strong>Carpeta:</strong> ---->(voting_mapping) y (voting_mappingII)
 
 <hr style="color: 30056b2;"/>
 <h2>Clase 4:</h2>
 :hamer:Llamadas Cross-Contract
 Traits con OpenBrush
-(CrossContract ,  openbrush::psp34 (MInteable))
+<strong>Carpeta:</strong> ---->(CrossContract ,  openbrush::psp34 (MInteable))
 
 <hr style="color: 30056b2;"/>
 <h2>Clase 5:</h2>
 Chain Extensions
-
+<strong>Carpeta:</strong> ----> (  )
 <hr style="color: 30056b2;"/>
+
 <h2>Clase 6:</h2>
 :hamer:
 Tests unitarios
 Tests de integración
 Tests E2E
+<strong>Carpeta:</strong> ---->(CrossContract)
 
 <hr style="color: 30056b2;"/>
 <h2>Clase 7:</h2>
 :hamer:Métodos de Actualización de contratos
 Verificación de contratos on-chain
+<strong>Carpeta:</strong> ----> (   )
 
 <hr style="color: 30056b2;"/>
 <h2>Clase 8:</h2>
 :hamer:Repaso de Librería Polkadot.js
 Useink (React hooks)
 
-
+<strong>Carpeta:</strong> ----> ( )
