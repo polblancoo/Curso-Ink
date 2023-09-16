@@ -100,7 +100,7 @@ pub mod Voting {
                 self.voters.insert(voter, &0);
                 //emite evento.
                 self.env().emit_event(NewVoter { voter });
-                //devuelve OK(bool o Err ), por el Result
+                
             }
             
             
@@ -165,12 +165,13 @@ pub mod Voting {
             if total_votes == 0 {
                 1
             } else {
+                //_ if booster >= 10 && booster <= 25  => 1,
                 let booster = (sender_votes  / total_votes)  * 100;
                 match booster {
-                    _ if booster <= 25 => 2,
-                    _ if booster <= 50 => 3,
-                    _ if booster <= 75 => 4,
-                    _ => 5,
+                    _ if (10..=25).contains(&booster)  => 1,
+                    _ if booster <= 50 => 2,
+                    _ if booster <= 75 => 3,
+                    _ => 1,
                 }
             }
         }
@@ -219,19 +220,20 @@ pub mod Voting {
             #[ink(message)]
             fn vote_trait(&mut self , caller: AccountId , voter: AccountId )-> bool {
                 // Implementa la lógica de votación específica del contrato aquí
-                //self.vote( voter , value)
+                
+                if caller==voter {return false};
                 let value = 1;
                 if  value < 1 {
                     return false;
                 }
-                
+                if self.is_voter(&caller)==false {return false};
                 if self.is_voter(&voter) {
                    // println!("es votante :{:?}", self.is_voter(&voter));
                     let sender_votes = self.voters.get(&caller).unwrap_or(1);
                    //println!("Cantidad de votos antes de Booster :{:?}", sender_votes);
                     let booster = self.calculate_booster(sender_votes);
                   // println!(" Booster :{:?}", booster);
-                    let added_votes = value * booster;
+                    let added_votes = value + booster;
                     self.voters.insert(voter, &added_votes);
                     // Sumar los votos al total_votos
                         self.total_votos += added_votes;
@@ -256,8 +258,10 @@ pub mod Voting {
             }
           #[ink(message)]
           fn get_votes_trait(&self, voter: AccountId) -> i32{
-           // let from = Self::env().caller();
-            self.get_votes( voter)
+           let caller = Self::env().caller();
+            if caller !=voter {return 0};
+                self.get_votes( voter)
+            
            }
            #[ink(message)]
             fn add_voter_trait(&mut self, caller: AccountId , voter: AccountId)-> bool {
