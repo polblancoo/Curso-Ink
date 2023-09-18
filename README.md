@@ -7,7 +7,7 @@
  <A HREF="https://github.com/swankyhub/swanky-node">Descargar swanky-node -nodo alternativo </A></br>
   
 Colocar substrate-contracts-node en una carpeta del PATH del sistema</br>
-<strong>Nota:</strong> Al correr el nodo , setear la variable de entorno CONTRACT_NODE="path/del nodo"</br>
+<strong>Nota:</strong> Al correr el nodo , setting la variable de entorno CONTRACT_NODE="path/del nodo"</br>
 
 <h1>Software utilizado:</h1>
 Software	Versión
