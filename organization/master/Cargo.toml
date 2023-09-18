@@ -10,7 +10,8 @@ ink = { version = "4.2.0", default-features = false }
 scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2.6", default-features = false, features = ["derive"], optional = true }
 Voting = { path = "../votantes", default-features = false, features = ["ink-as-dependency",] }
-psp34_lop= { path = "../psp34_lop", default-features = false,  features = ["ink-as-dependency",] }
+#psp34_lop= { path = "../psp34_lop", default-features = false,  features = ["ink-as-dependency"] }
+psp34_bis= { path = "../psp34_bis", default-features = false,  features = ["ink-as-dependency"] }
 
 [dev-dependencies]
 ink_e2e = "4.2.0"
@@ -25,7 +26,10 @@ std = [
     "scale/std",
     "scale-info/std",
     "Voting/std", 
-    "psp34_lop/std",
+    # Nota:La generacion de metadata requiere `std`.Si no lo especificamos
+    # el contrato falla 
+    #"psp34_lop/std",
+     "psp34_bis/std",
 ]
 ink-as-dependency = []
 e2e-tests = []

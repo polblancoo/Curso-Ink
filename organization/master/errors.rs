@@ -8,5 +8,6 @@ pub enum Error {
     VoterNotExist,
     CannotVoteItself,
     YouAreNotVoter,
+    NotVoterError,
     NftNotSent, 
 }

@@ -14,13 +14,15 @@ mod master {
         },
         selector_bytes,
     };
-
+   // use crate::errors;
     use crate::errors::Error;
     use Voting::VotantesRef;
     use Voting::voting_organizacion::VotingOrganization;
-    use psp34_lop::ContractRef;
+ //   use psp34_lop::ContractRef;
+    use psp34_bis::ContractbisRef;
+    
 
-    use crate::errors;
+    
 
 
     //Eventos
@@ -37,11 +39,13 @@ mod master {
     pub struct Master {
         /// Ref. a los contratos votacion y nft.
         voting_contract: VotantesRef,
-        psp34_contract: ContractRef
+      
+       psp34_bis: ContractbisRef,
+		
     }
 
     impl Master {
-        /// Constructor that initializes the `bool` value to the given `init_value`.
+        /// Constructor that initializes Master / voting / psp34.
         #[ink(constructor)]
         pub fn new(admin_voters: AccountId,voting_contract_code_hash: Hash, psp34_contract_code_hash: Hash) -> Self {
             let caller = Self::env().caller();
@@ -52,74 +56,80 @@ mod master {
                     .salt_bytes(Vec::new()) // Sequence of bytes
                     .instantiate(),
                    
-                psp34_contract: ContractRef::new()
+               
+                 psp34_bis: ContractbisRef::new()
                     .code_hash(psp34_contract_code_hash)
                     .endowment(0)
                     .salt_bytes(Vec::new()) // Sequence of bytes
-                    .instantiate(),    
+                    .instantiate(),          
+                
             }
         }
+        /// Devuelve total de psp34 minteados
         #[ink(message)]
-        pub fn total_mint_psp34_lop(&mut self)->u128{
-            let t = self.psp34_contract.total_psp34_lop( );
-            match t{
-                Ok(t)=>{t},
-                Err(_)=>{0}
-            }  
+        pub fn total_mint_psp34_lop(&mut self)->u8{
+            psp34_bis::ContractbisRef::total_nft(&mut self.psp34_bis).unwrap_or(0)
+            
+            
         }
+        ///Votacion de caller a candidate
         #[ink(message)]
-        pub fn vote_with_ref(&mut self, candidate: AccountId)-> Result<(), Error>  {
-            //se emite un voto por vez.
-            let caller = self.env().caller();
-            if self.voting_contract.vote_trait(caller.clone() , candidate.clone()){
-               //se mintea al caller , quien voto 
-              match  self.psp34_contract.mint_token_r( caller){
-                Ok(())=>{
-                    let t = self.psp34_contract.total_psp34_lop( ).unwrap();
-                    //TODO (Emitir evento)
-                   // let caller = self.env().caller();
-                   // self.env().emit_event( NewVoter_Mint{
-                   //     voter: caller.clone(),
-                   //     count: t as i32
-                   // })
-                  // ;
-                   Ok(())
-                }
-                Err(err)=> {
-                    Err( Error::NotAdmin)
-                    
-                }
+        pub fn vote_with_ref(&mut self, caller_id: AccountId, candidate: AccountId)-> Result<(), Error>  {
+               //se emite un voto por vez.
+                if candidate == caller_id {return Err( Error::CannotVoteItself)};
+                match self.voting_contract.vote_trait(caller_id , candidate){
+                   Ok(T) => {true},
+                   Err(E)=>return Err( Error::NotVoterError)
+                };
+                //if a == false {return Err( Error::NotVoterError)}; 
 
-              }
-                               
-                
-            }else{
-                Err( Error::YouAreNotVoter)
-            } 
-                
+               //se mintea al caller , quien voto 
+              //psp34_lop::ContractRef::mint(caller_id, self.next_id+1)
+           
+              if let Err(err) =psp34_bis::ContractbisRef::mint_to(&mut self.psp34_bis , caller_id)  {
+                Err( Error::NftNotSent)
+    
+            } else {
+               
+                               // let t = self.psp34_contract.total_psp34_lop( ).unwrap();
+                    
+                                //TODO (Emitir evento)
+                               // let caller = self.env().caller();
+                               // self.env().emit_event( NewVoter_Mint{
+                               //     voter: caller.clone(),
+                               //     count: t as i32
+                               // })
+                              // ;
+                               Ok(())
+                            }
+                              
+           // Ok(())
+           
         }
+        /// Obiene votos solo el dueño puede ver sus votos
         #[ink(message)]
         pub fn get_votes_with_ref(& self)-> i32 {
             let candidate = Self::env().caller();
             //se emite un voto por vez.
             self.voting_contract.get_votes(candidate)
         }
-
+        ///Agrega votantes a la lista de aptos para votar a otros candidatos 
         #[ink(message)]
         pub fn add_voters_with_ref(&mut self, caller: AccountId, candidate: AccountId)-> Result<(), Error> {
            // let candidate = Self::env().caller();
             if !self.voting_contract.add_voter_trait( caller, candidate){
                 
-                    return Err(errors::Error::VoterNotExist)
+                    return Err(Error::VoterNotExist)
                   };
                  Ok(())
         }
+        /// Elimina de la lista de votantes para votar
         #[ink(message)]
         pub fn remove_voter_with_ref(&mut self,caller: AccountId, candidate: AccountId) ->  Result<(), Error> {
                     
             if !self.voting_contract.remove_voter_trait (caller, candidate)
               {
-                return Err(errors::Error::NotAdmin)
+                return Err(Error::NotAdmin)
               };
              Ok(())
             

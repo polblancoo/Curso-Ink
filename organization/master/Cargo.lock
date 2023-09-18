@@ -2586,7 +2586,7 @@ dependencies = [
  "ink",
  "ink_e2e",
  "parity-scale-codec",
- "psp34_lop",
+ "psp34_bis",
  "scale-info",
 ]
 
@@ -3217,8 +3217,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "psp34_lop"
-version = "1.0.0"
+name = "psp34_bis"
+version = "0.1.0"
 dependencies = [
  "ink",
  "openbrush",
