@@ -2,6 +2,7 @@
 :construction:Curso 2023 Introduccion a Ink !:construction:
 <h1>Acciones:</h1>
   <A HREF="https://use.ink/getting-started/setup"> Ink! setup </A></br>
+   <A HREF="https://github.com/paritytech/cargo-contract"> Cargo-Contract </A></br>
   <A HREF="https://github.com/paritytech/substrate-contracts-node/releases">Descargar substrate-contracts-node-linux.tar.gz </A></br>
  <A HREF="https://github.com/swankyhub/swanky-node">Descargar swanky-node -nodo alternativo </A></br>
   
