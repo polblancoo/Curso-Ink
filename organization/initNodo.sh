@@ -2,6 +2,6 @@
 #replica comandos en consola al ejecutarse
 set -eu
 #enviroment 
-export CONTRACTS_NODE="/home/pablo/Rust-Curso/swanky-node"
-/home/pablo/Rust-Curso/swanky-node --dev
+export CONTRACTS_NODE="../Rust-Curso/swanky-node"
+../Rust-Curso/swanky-node --dev
 
