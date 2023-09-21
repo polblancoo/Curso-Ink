@@ -253,8 +253,8 @@ mod master {
             let message = build_message::<MasterRef>(contract_Master_id.clone())
             .call (|MasterRef| MasterRef.get_votes_with_ref());  
            let get_result = client.call_dry_run(&ink_e2e::charlie(), &message, 0, None).await;
-               
-               assert!(get_result , 1);
+               let r = get_result as i32;
+               assert_eq!(r , 1);
 
             Ok(())
         }
