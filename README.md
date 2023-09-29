@@ -20,8 +20,8 @@ substrate-contracts-node o swanky </br>
 
 <hr style="color: 30056b2;"/>
 Nota: Este curso se empezo como una iniciativa de  <A HREF="https://www.youtube.com/watch?v=N_h_gi0wCag&list=PLnf2S4I9w85NXy-hzAifcI_px08FPGicu">Polkadot Hub </A></br><strong> Capitulos 1 al 8</strong>
-<h2>*Los siguientes capitulos los agregarè a medida que avance.<strong>
-  Gracias y espero que les sea ùtil</h2>
+<h2>*Los siguientes capítulos los agregaré a medida que avance.<strong>
+  Gracias y espero que les sea útil</h2>
 
                                                      
 <h2>Clase 1:</h2>
