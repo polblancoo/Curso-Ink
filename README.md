@@ -1,4 +1,4 @@
-<h1 align="center"><>🦑 ink-examples </h1>
+<h1 align="center"><>🦑 Ink! -examples </h1>
 :construction:Curso 2023 Introduccion a Ink !:construction:
 <h1>Acciones:</h1>
   <A HREF="https://use.ink/getting-started/setup"> Ink! setup </A></br>
