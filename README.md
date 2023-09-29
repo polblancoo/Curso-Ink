@@ -79,5 +79,5 @@ Useink (React hooks)
 
 <hr style="color: 30056b2;"/>
 <h2>Upgrade Set codeHash 10:</h2>
-🦑 <A HREF="[https://github.com/polblancoo/Wasm_Contract_Substrate](https://github.com/polblancoo/ReputationSystem/tree/main/contracts/psp34_bis)https://github.com/polblancoo/ReputationSystem/tree/main/contracts/psp34_bis">Upgrade Contract  </A></br>
+🦑 <A HREF="https://github.com/polblancoo/ReputationSystem/tree/main/contracts/psp34_bis">Upgrade Contract  </A></br>
 
