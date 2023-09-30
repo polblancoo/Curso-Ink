@@ -11,13 +11,14 @@ Colocar substrate-contracts-node en una carpeta del PATH del sistema</br>
 
 <h1>Software utilizado:</h1>
 Software	Versión
-rustup	1.26.0 (5af9b9484 2023-04-05)</br>
-rustc	1.72.0 (5680fa18f 2023-08-23)</br>
-cargo	1.72.0 (103a7ff2e 2023-08-15)</br>
-cargo-contract	3.2.0-unknown-x86_64-unknown-linux-gnu</br>
-substrate-contracts-node o swanky </br>
-
-
+*rustup	1.26.0 (5af9b9484 2023-04-05)</br>
+*rustc	1.72.0 (5680fa18f 2023-08-23)</br>
+*cargo	1.72.0 (103a7ff2e 2023-08-15)</br>
+*cargo-contract	3.2.0-unknown-x86_64-unknown-linux-gnu</br>
+*substrate-contracts-node o swanky </br>
+*<A HREF="https://openbrush.brushfam.io/">Openbrushbrushfam</A></br>
+<A HREF="https://github.com/Brushfam/openbrush-contracts/">Examples </A></br>
+  
 <hr style="color: 30056b2;"/>
 Nota: Este curso se empezo como una iniciativa de  <A HREF="https://www.youtube.com/watch?v=N_h_gi0wCag&list=PLnf2S4I9w85NXy-hzAifcI_px08FPGicu">Polkadot Hub </A></br><strong> Capitulos 1 al 8</strong>
 <h2>*Los siguientes capítulos los agregaré a medida que avance.<strong>
