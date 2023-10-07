@@ -20,7 +20,7 @@ Software	Versión
 <A HREF="https://github.com/Brushfam/openbrush-contracts/">Examples </A></br>
   
 <hr style="color: 30056b2;"/>
-Nota: Este curso se empezo como una iniciativa de  <A HREF="https://www.youtube.com/watch?v=N_h_gi0wCag&list=PLnf2S4I9w85NXy-hzAifcI_px08FPGicu">Polkadot Hub </A></br><strong> Capitulos 1 al 8</strong>
+Nota: Este curso comenzó como una iniciativa de  <A HREF="https://www.youtube.com/watch?v=N_h_gi0wCag&list=PLnf2S4I9w85NXy-hzAifcI_px08FPGicu">Polkadot Hub </A></br><strong> Capitulos 1 al 8</strong>
 <h2>*Los siguientes capítulos los agregaré a medida que avance.<strong>
   Gracias y espero que les sea útil</h2>
 
@@ -90,4 +90,11 @@ Useink (React hooks)
 <hr style="color: 30056b2;"/>
 <h2>Access Control 11:</h2>
 🦑 <A HREF="https://github.com/polblancoo/ReputationSystem/tree/main/contracts/psp34_bis">Access Control  </A></br>
+
+<hr style="color: 30056b2;"/>
+<h2>Call Build 12:</h2>
+🦑 <A HREF="https://github.com/polblancoo/Curso-Ink/tree/main/Call_build">Call_Build  </A></br>
+
+
+
 
