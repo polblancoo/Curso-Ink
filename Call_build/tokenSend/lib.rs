@@ -46,45 +46,7 @@ mod tokenSend {
 
         }
 
-        #[ink(message)]
-        pub fn get_balanceOf_from_token_contract2(&mut self, token_contract_address: AccountId, account_id: AccountId)->Result< u128, Error> {
-            let my_return_value = build_call::<DefaultEnvironment>()
-            .call(token_contract_address)
-            .gas_limit(0)
-            .transferred_value(0)
-            .exec_input(
-                ExecutionInput::new(Selector::new(ink::selector_bytes!("balanceOf")))
-                    .push_arg(account_id)
-                    
-            )
-            .returns::<Result< u128, Error>>()
-            .invoke();
-        match  my_return_value {
-            Ok(result) => Ok(result),
-            Err(err) => Err(err),
-        }      
-        }
-        /// A message that can be called on instantiated contracts.
-        /// This one flips the value of the stored `bool` from `true`
-        /// to `false` and vice versa.
-        #[ink(message)]
-        pub fn get_totalSupply_from_token_contract(&mut self, token_contract_address: AccountId, account_id: AccountId)->Result< u128, Error> {
-            let my_return_value = build_call::<DefaultEnvironment>()
-            .call(token_contract_address)
-            .gas_limit(0)
-            .transferred_value(0)
-            .exec_input(
-                ExecutionInput::new(Selector::new(ink::selector_bytes!("totalSupply")))
-                    //.push_arg(account_id)
-                    
-            )
-            .returns::<Result< u128, Error>>()
-            .invoke();
-        match  my_return_value {
-            Ok(result) => Ok(result),
-            Err(err) => Err(err),
-        }      
-
+       
 
           
         }
