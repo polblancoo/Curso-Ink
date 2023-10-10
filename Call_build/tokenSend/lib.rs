@@ -45,11 +45,72 @@ mod tokenSend {
             }
 
         }
-
-       
-
+        ///AccountId de  psp22Token1 contract
+        #[ink(message)]
+        pub fn getBalanceOfFromUserOfVault(&mut self, token_contract_address: AccountId,account_id: AccountId)->Balance {
+            let my_return_value = build_call::<DefaultEnvironment>()
+            .call(token_contract_address)
+            .gas_limit(0)
+            .transferred_value(0)
+            .exec_input(
+                ExecutionInput::new(Selector::new(ink::selector_bytes!("totalsupplypricesByCount")))
+                    .push_arg(account_id)
+                    
+            )
           
+            .returns::<Balance>()
+            .invoke();
+      
+        my_return_value
+     }
+       ///AccountId de  psp22Token1 contract
+        #[ink(message)]
+        pub fn getTotalSupply_FromTokenVault(&mut self, token_contract_address: AccountId)->Balance {
+            let my_return_value = build_call::<DefaultEnvironment>()
+            .call(token_contract_address)
+            .gas_limit(0)
+            .transferred_value(0)
+            .exec_input(
+                ExecutionInput::new(Selector::new(ink::selector_bytes!("totalsupplypricesByCount")))
+                    .push_arg(token_contract_address)                           //  totalsupplypricesByCount
+                    
+            )
+            .returns::<Balance>()
+            .invoke();
+        /* 
+        match  my_return_value {
+            Ok(result) => Ok(result),
+            Err(err) => Err(err),
+        }       */
+
+
+          my_return_value
         }
+        ///AccountId de  psp22Token1 contract
+        #[ink(message)]
+        pub fn transferToFromVault(&mut self, token_contract_address: AccountId, account_id: AccountId, amount: Balance, _data: Vec<u8>,)->() {
+            let my_return_value = build_call::<DefaultEnvironment>()
+            .call(token_contract_address)
+            .gas_limit(0)
+            .transferred_value(0)
+            .exec_input(
+                ExecutionInput::new(Selector::new(ink::selector_bytes!("transferTo")))
+                    .push_arg(token_contract_address)
+                    .push_arg(account_id)
+                    .push_arg(amount)
+                    .push_arg(_data)                           //  totalsupplypricesByCount
+                    
+            )
+            .returns::<()>()
+            .invoke();
+        
+        }
+
+
+
+
+
+        ///AccountId de flipper contract
         #[ink(message)]
         pub fn flip_contract_callbuildeer_sin_gas(&mut self,token_contract_address: AccountId )-> () {
            // ,token_contract_address: AccountId
@@ -70,6 +131,7 @@ mod tokenSend {
         .invoke();
        my_return_value
     }
+       ///AccountId de flipper contract
         #[ink(message)]
         pub fn get_flip2_buill_call(&mut self, token_contract_address: AccountId, account_id: AccountId )-> i32{
 
