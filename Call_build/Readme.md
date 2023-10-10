@@ -13,5 +13,11 @@ token_contract_address: Es la direccion de contrato de Flipper
 <strong> pub fn get_flip2_buill_call(&mut self, token_contract_address: AccountId, account_id: AccountId )-> i32 (</strong> <br>
 ---->  llama a la fn get() del contrato flipper <br>
 
+<strong> pub fn getBalanceOfFromUserOfVault(&mut self, token_contract_address: AccountId,account_id: AccountId)->Balance (</strong> <br>
+---->  llama a la fn totalsupplypricesByCount() del contrato psp22Token1 <br>
+
+<strong>   pub fn transferToFromVault(&mut self, token_contract_address: AccountId, account_id: AccountId, amount: Balance, _data: Vec<u8>,)->()(</strong> <br>
+---->  llama a la fn transferTo() del contrato psp22Token1 <br>
+
 Source: https://docs.rs/ink_lang/latest/ink_lang/struct.EnvAccess.html
 .CHEERS!
