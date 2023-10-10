@@ -6,7 +6,7 @@ token_contract_address: Es la direccion de contrato de Flipper
 
 
 <h2>Build Call:</h2>
-🦑Hay dos Funciones: <br>
+🦑 Funciones: <br>
 <strong> pub fn flip_contract_callbuildeer_sin_gas(&mut self,token_contract_address: AccountId )-> () (</strong> <br>
 ---->  llama a la fn flip() del contrato flipper  <br>
 
